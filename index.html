@@ -3,7 +3,6 @@
 
 <head>
 <meta charset="UTF-8">
-
 <title>OpsyMind BPM</title>
 
 <link
@@ -18,13 +17,19 @@ body{
     font-family:'Segoe UI',sans-serif;
     color:white;
     text-align:center;
-
-    background:
-    radial-gradient(circle at 20% 20%, #1e3a8a, transparent),
-    radial-gradient(circle at 80% 30%, #0ea5e9, transparent),
-    #020617;
-
     overflow-x:hidden;
+    background:#020617;
+}
+
+/* cyber background */
+
+#bgCanvas{
+    position:fixed;
+    inset:0;
+    width:100%;
+    height:100%;
+    z-index:-2;
+    background:#020617;
 }
 
 /* container */
@@ -341,6 +346,32 @@ body{
     background:rgba(255,255,255,0.2);
 }
 
+/* FFT canvas */
+
+canvas{
+
+    width:140px;
+
+    height:42px;
+
+    border-radius:12px;
+
+    display:block;
+
+    z-index:2;
+
+    background:
+    radial-gradient(circle at center,#020617,#000);
+
+    box-shadow:
+    inset 0 0 25px rgba(0,0,0,.9),
+    0 0 20px rgba(56,189,248,.08);
+
+    position:relative;
+
+    overflow:hidden;
+}
+
 /* progress */
 
 .progress-audio{
@@ -374,23 +405,6 @@ body{
         #38bdf8,
         #0ea5e9
     );
-}
-
-/* FFT */
-
-canvas{
-
-    width:140px;
-
-    height:42px;
-
-    border-radius:10px;
-
-    background:rgba(255,255,255,0.03);
-
-    display:block;
-
-    z-index:2;
 }
 
 /* time */
@@ -575,7 +589,6 @@ canvas{
 /* footer */
 
 footer{
-
     margin-top:40px;
 }
 
@@ -583,6 +596,10 @@ footer{
 </head>
 
 <body>
+
+<!-- CYBER BACKGROUND -->
+
+<canvas id="bgCanvas"></canvas>
 
 <div class="container">
 
@@ -657,7 +674,7 @@ footer{
 
     </div>
 
-    <!-- result -->
+    <!-- results -->
 
     <div class="cards" id="result"></div>
 
@@ -678,6 +695,10 @@ footer{
 </footer>
 
 <script>
+
+/* =========================
+   ELEMENTS
+========================= */
 
 const dropzone =
 document.getElementById("dropzone");
@@ -718,15 +739,15 @@ document.getElementById("loader");
 const volumeSlider =
 document.getElementById("volumeSlider");
 
-/* open file */
+/* =========================
+   FILE
+========================= */
 
 dropzone.onclick = () =>
 fileInput.click();
 
 fileInput.onchange = () =>
 handle(fileInput.files[0]);
-
-/* handle */
 
 function handle(file){
 
@@ -744,7 +765,9 @@ function handle(file){
     upload(file);
 }
 
-/* play */
+/* =========================
+   PLAY
+========================= */
 
 playBtn.onclick = () => {
 
@@ -766,7 +789,9 @@ playBtn.onclick = () => {
     }
 };
 
-/* stop */
+/* =========================
+   STOP
+========================= */
 
 stopBtn.onclick = () => {
 
@@ -786,7 +811,9 @@ stopBtn.onclick = () => {
     .innerHTML = "";
 };
 
-/* volume */
+/* =========================
+   VOLUME
+========================= */
 
 volumeSlider.oninput = () => {
 
@@ -794,7 +821,9 @@ volumeSlider.oninput = () => {
     volumeSlider.value;
 };
 
-/* progress */
+/* =========================
+   PROGRESS
+========================= */
 
 audio.ontimeupdate = () => {
 
@@ -832,7 +861,9 @@ progressAudio.onclick = e => {
     (clickX / width) * audio.duration;
 };
 
-/* upload */
+/* =========================
+   UPLOAD
+========================= */
 
 function upload(file){
 
@@ -878,7 +909,9 @@ function upload(file){
     });
 }
 
-/* FFT */
+/* =========================
+   VISUALIZER
+========================= */
 
 function visualize(){
 
@@ -897,7 +930,7 @@ function visualize(){
 
     analyser.fftSize = 256;
 
-    analyser.smoothingTimeConstant = 0.92;
+    analyser.smoothingTimeConstant = 0.93;
 
     const bufferLength =
     analyser.frequencyBinCount;
@@ -909,57 +942,105 @@ function visualize(){
 
     canvas.height = 42;
 
-    const particles = [];
+    const stars = [];
 
-    function createParticle(x,y){
+    for(let i=0;i<90;i++){
 
-        particles.push({
+        stars.push({
 
-            x,
-            y,
+            x:Math.random()*canvas.width,
 
-            size:Math.random()*3+1,
+            y:Math.random()*canvas.height,
 
-            speed:Math.random()*0.6+0.2,
+            size:Math.random()*1.8,
 
-            alpha:1
+            speed:Math.random()*0.15 + 0.03,
+
+            alpha:Math.random()
         });
     }
 
-    function drawParticles(){
+    function drawSpace(){
 
-        for(
-            let i=particles.length-1;
-            i>=0;
-            i--
-        ){
+        const gradient =
+        ctx.createLinearGradient(
+            0,
+            0,
+            canvas.width,
+            canvas.height
+        );
 
-            const p = particles[i];
+        gradient.addColorStop(0,"#000000");
+
+        gradient.addColorStop(0.5,"#020617");
+
+        gradient.addColorStop(1,"#000814");
+
+        ctx.fillStyle = gradient;
+
+        ctx.fillRect(
+            0,
+            0,
+            canvas.width,
+            canvas.height
+        );
+
+        const nebula =
+        ctx.createRadialGradient(
+            70,
+            20,
+            0,
+            70,
+            20,
+            60
+        );
+
+        nebula.addColorStop(
+            0,
+            "rgba(56,189,248,.12)"
+        );
+
+        nebula.addColorStop(
+            1,
+            "transparent"
+        );
+
+        ctx.fillStyle = nebula;
+
+        ctx.fillRect(
+            0,
+            0,
+            canvas.width,
+            canvas.height
+        );
+
+        stars.forEach(star => {
 
             ctx.beginPath();
 
             ctx.arc(
-                p.x,
-                p.y,
-                p.size,
+                star.x,
+                star.y,
+                star.size,
                 0,
                 Math.PI*2
             );
 
             ctx.fillStyle =
-            `rgba(56,189,248,${p.alpha})`;
+            `rgba(255,255,255,${star.alpha})`;
 
             ctx.fill();
 
-            p.y -= p.speed;
+            star.y += star.speed;
 
-            p.alpha -= 0.015;
+            if(star.y > canvas.height){
 
-            if(p.alpha <= 0){
+                star.y = 0;
 
-                particles.splice(i,1);
+                star.x =
+                Math.random()*canvas.width;
             }
-        }
+        });
     }
 
     function draw(){
@@ -968,12 +1049,7 @@ function visualize(){
 
         analyser.getByteFrequencyData(dataArray);
 
-        ctx.clearRect(
-            0,
-            0,
-            canvas.width,
-            canvas.height
-        );
+        drawSpace();
 
         let barWidth =
         canvas.width / bufferLength;
@@ -982,8 +1058,7 @@ function visualize(){
 
             let value = dataArray[i];
 
-            let percent =
-            value / 255;
+            let percent = value / 255;
 
             let height =
             canvas.height * percent;
@@ -991,7 +1066,10 @@ function visualize(){
             let offset =
             canvas.height - height;
 
-            let hue = i * 4;
+            ctx.shadowBlur = 14;
+
+            ctx.shadowColor =
+            "rgba(56,189,248,.9)";
 
             ctx.beginPath();
 
@@ -1001,35 +1079,246 @@ function visualize(){
 
                 offset,
 
-                barWidth - 1.5,
+                barWidth - 1.8,
 
                 height,
 
                 6
             );
 
-            ctx.fillStyle =
-            `hsla(${190 + hue/8},100%,60%,0.9)`;
+            const grad =
+            ctx.createLinearGradient(
+                0,
+                offset,
+                0,
+                canvas.height
+            );
+
+            grad.addColorStop(
+                0,
+                "#7dd3fc"
+            );
+
+            grad.addColorStop(
+                1,
+                "#0ea5e9"
+            );
+
+            ctx.fillStyle = grad;
 
             ctx.fill();
 
-            if(
-                value > 160 &&
-                Math.random() > 0.92
-            ){
-
-                createParticle(
-                    i * barWidth,
-                    offset
-                );
-            }
+            ctx.shadowBlur = 0;
         }
-
-        drawParticles();
     }
 
     draw();
 }
+
+/* =========================
+   CYBER BACKGROUND
+========================= */
+
+const bgCanvas =
+document.getElementById("bgCanvas");
+
+const bgCtx =
+bgCanvas.getContext("2d");
+
+function resizeBG(){
+
+    bgCanvas.width =
+    window.innerWidth;
+
+    bgCanvas.height =
+    window.innerHeight;
+}
+
+resizeBG();
+
+window.addEventListener(
+    "resize",
+    resizeBG
+);
+
+/* particles */
+
+const bgParticles = [];
+
+for(let i=0;i<120;i++){
+
+    bgParticles.push({
+
+        x:Math.random()*bgCanvas.width,
+
+        y:Math.random()*bgCanvas.height,
+
+        radius:Math.random()*2 + 0.5,
+
+        speedX:(Math.random()-0.5)*0.2,
+
+        speedY:(Math.random()-0.5)*0.2,
+
+        alpha:Math.random()
+    });
+}
+
+/* grid */
+
+const gridOffset = {
+    x:0,
+    y:0
+};
+
+function drawGrid(){
+
+    const size = 45;
+
+    bgCtx.strokeStyle =
+    "rgba(56,189,248,0.05)";
+
+    bgCtx.lineWidth = 1;
+
+    for(
+        let x = gridOffset.x % size;
+        x < bgCanvas.width;
+        x += size
+    ){
+
+        bgCtx.beginPath();
+
+        bgCtx.moveTo(x,0);
+
+        bgCtx.lineTo(x,bgCanvas.height);
+
+        bgCtx.stroke();
+    }
+
+    for(
+        let y = gridOffset.y % size;
+        y < bgCanvas.height;
+        y += size
+    ){
+
+        bgCtx.beginPath();
+
+        bgCtx.moveTo(0,y);
+
+        bgCtx.lineTo(bgCanvas.width,y);
+
+        bgCtx.stroke();
+    }
+
+    gridOffset.x += 0.08;
+
+    gridOffset.y += 0.03;
+}
+
+/* particles */
+
+function drawParticles(){
+
+    bgParticles.forEach(p => {
+
+        bgCtx.beginPath();
+
+        bgCtx.arc(
+            p.x,
+            p.y,
+            p.radius,
+            0,
+            Math.PI*2
+        );
+
+        bgCtx.fillStyle =
+        `rgba(125,211,252,${p.alpha})`;
+
+        bgCtx.shadowBlur = 15;
+
+        bgCtx.shadowColor =
+        "rgba(56,189,248,.8)";
+
+        bgCtx.fill();
+
+        bgCtx.shadowBlur = 0;
+
+        p.x += p.speedX;
+
+        p.y += p.speedY;
+
+        if(p.x < 0)
+            p.x = bgCanvas.width;
+
+        if(p.x > bgCanvas.width)
+            p.x = 0;
+
+        if(p.y < 0)
+            p.y = bgCanvas.height;
+
+        if(p.y > bgCanvas.height)
+            p.y = 0;
+    });
+}
+
+/* glow */
+
+function drawGlow(){
+
+    const glow =
+    bgCtx.createRadialGradient(
+
+        bgCanvas.width/2,
+        bgCanvas.height/2,
+        0,
+
+        bgCanvas.width/2,
+        bgCanvas.height/2,
+        bgCanvas.width/1.2
+    );
+
+    glow.addColorStop(
+        0,
+        "rgba(56,189,248,.08)"
+    );
+
+    glow.addColorStop(
+        1,
+        "transparent"
+    );
+
+    bgCtx.fillStyle = glow;
+
+    bgCtx.fillRect(
+        0,
+        0,
+        bgCanvas.width,
+        bgCanvas.height
+    );
+}
+
+/* animate */
+
+function animateBG(){
+
+    requestAnimationFrame(
+        animateBG
+    );
+
+    bgCtx.clearRect(
+        0,
+        0,
+        bgCanvas.width,
+        bgCanvas.height
+    );
+
+    drawGlow();
+
+    drawGrid();
+
+    drawParticles();
+}
+
+animateBG();
 
 </script>
 
