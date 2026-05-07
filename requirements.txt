@@ -5,3 +5,4 @@ numpy
 librosa
 soundfile
 python-multipart
+resampy
