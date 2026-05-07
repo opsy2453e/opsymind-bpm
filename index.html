@@ -158,6 +158,8 @@ body{
 
     animation:
     intro 1.5s ease;
+
+    transition:transform .08s linear;
 }
 
 /* intro */
@@ -260,6 +262,8 @@ body{
     cursor:pointer;
 
     transition:.35s;
+
+    display:block;
 }
 
 .dropzone:hover{
@@ -666,16 +670,12 @@ footer{
 
 <body>
 
-<!-- BACKGROUND -->
-
 <canvas id="bgCanvas"></canvas>
 
 <div class="ring ring1"></div>
 <div class="ring ring2"></div>
 
 <div class="cursor-glow" id="cursorGlow"></div>
-
-<!-- APP -->
 
 <div class="container" id="container">
 
@@ -693,11 +693,16 @@ footer{
 
     </div>
 
-    <div class="dropzone" id="dropzone">
+    <label class="dropzone" id="dropzone" for="fileInput">
         📤 Перетащи MP3 или нажми
-    </div>
+    </label>
 
-    <input type="file" id="fileInput" hidden>
+    <input
+    type="file"
+    id="fileInput"
+    accept=".mp3,audio/mpeg"
+    hidden
+    >
 
     <div class="glass-player" id="player">
 
@@ -781,8 +786,30 @@ const bgCtx =
 bgCanvas.getContext("2d");
 
 /* =========================
-   PARALLAX + CURSOR GLOW
+   SMOOTH PARALLAX
 ========================= */
+
+let currentX = 0;
+let currentY = 0;
+
+let targetX = 0;
+let targetY = 0;
+
+function animateContainer(){
+
+    currentX += (targetX - currentX) * 0.08;
+    currentY += (targetY - currentY) * 0.08;
+
+    container.style.transform = `
+        rotateY(${currentX}deg)
+        rotateX(${currentY}deg)
+        translateZ(0)
+    `;
+
+    requestAnimationFrame(animateContainer);
+}
+
+animateContainer();
 
 document.addEventListener(
     "mousemove",
@@ -794,18 +821,11 @@ document.addEventListener(
         cursorGlow.style.top =
         e.clientY + "px";
 
-        let x =
-        (window.innerWidth/2 - e.clientX)/40;
+        targetX =
+        -((window.innerWidth / 2 - e.clientX) / 45);
 
-        let y =
-        (window.innerHeight/2 - e.clientY)/40;
-
-        container.style.transform =
-
-        `
-        rotateY(${-x}deg)
-        rotateX(${y}deg)
-        `;
+        targetY =
+        ((window.innerHeight / 2 - e.clientY) / 45);
     }
 );
 
@@ -813,8 +833,8 @@ document.addEventListener(
     "mouseleave",
     () => {
 
-        container.style.transform =
-        "rotateY(0deg) rotateX(0deg)";
+        targetX = 0;
+        targetY = 0;
     }
 );
 
@@ -873,8 +893,6 @@ function animateBG(){
         bgCanvas.height
     );
 
-    /* glow */
-
     const glow =
     bgCtx.createRadialGradient(
 
@@ -908,8 +926,6 @@ function animateBG(){
         bgCanvas.height
     );
 
-    /* grid */
-
     bgCtx.strokeStyle =
     "rgba(125,211,252,.08)";
 
@@ -934,8 +950,6 @@ function animateBG(){
 
         bgCtx.stroke();
     }
-
-    /* particles */
 
     particles.forEach(p=>{
 
@@ -1051,8 +1065,6 @@ function visualize(){
 
         avg /= buffer.length;
 
-        /* reactive pulse */
-
         pulse =
         avg / 1500;
     }
@@ -1061,6 +1073,186 @@ function visualize(){
 }
 
 visualize();
+
+/* =========================
+   FILE INPUT
+========================= */
+
+const fileInput =
+document.getElementById("fileInput");
+
+const dropzone =
+document.getElementById("dropzone");
+
+const player =
+document.getElementById("player");
+
+fileInput.addEventListener(
+    "change",
+    e => {
+
+        const file =
+        e.target.files[0];
+
+        if(!file) return;
+
+        const url =
+        URL.createObjectURL(file);
+
+        audio.src = url;
+
+        player.style.display = "flex";
+
+        audio.load();
+    }
+);
+
+/* drag & drop */
+
+dropzone.addEventListener(
+    "dragover",
+    e => {
+
+        e.preventDefault();
+
+        dropzone.style.borderColor =
+        "#7dd3fc";
+    }
+);
+
+dropzone.addEventListener(
+    "dragleave",
+    () => {
+
+        dropzone.style.borderColor =
+        "rgba(125,211,252,0.45)";
+    }
+);
+
+dropzone.addEventListener(
+    "drop",
+    e => {
+
+        e.preventDefault();
+
+        const file =
+        e.dataTransfer.files[0];
+
+        if(!file) return;
+
+        const url =
+        URL.createObjectURL(file);
+
+        audio.src = url;
+
+        player.style.display = "flex";
+
+        audio.load();
+
+        dropzone.style.borderColor =
+        "rgba(125,211,252,0.45)";
+    }
+);
+
+/* play / pause */
+
+const playBtn =
+document.getElementById("playBtn");
+
+playBtn.addEventListener(
+    "click",
+    () => {
+
+        if(audio.paused){
+
+            audio.play();
+
+            playBtn.innerHTML =
+            '<i class="ri-pause-fill"></i>';
+
+        }else{
+
+            audio.pause();
+
+            playBtn.innerHTML =
+            '<i class="ri-play-fill"></i>';
+        }
+    }
+);
+
+/* stop */
+
+document.getElementById("stopBtn")
+.addEventListener(
+    "click",
+    () => {
+
+        audio.pause();
+
+        audio.currentTime = 0;
+
+        playBtn.innerHTML =
+        '<i class="ri-play-fill"></i>';
+    }
+);
+
+/* volume */
+
+document.getElementById("volumeSlider")
+.addEventListener(
+    "input",
+    e => {
+
+        audio.volume = e.target.value;
+    }
+);
+
+/* progress */
+
+const progressAudio =
+document.getElementById("progressAudio");
+
+const progressFill =
+document.getElementById("progressFill");
+
+audio.addEventListener(
+    "timeupdate",
+    () => {
+
+        const percent =
+        (audio.currentTime / audio.duration) * 100;
+
+        progressFill.style.width =
+        percent + "%";
+
+        const min =
+        Math.floor(audio.currentTime / 60);
+
+        const sec =
+        Math.floor(audio.currentTime % 60)
+        .toString()
+        .padStart(2,"0");
+
+        document.getElementById("time")
+        .textContent =
+        `${min}:${sec}`;
+    }
+);
+
+progressAudio.addEventListener(
+    "click",
+    e => {
+
+        const rect =
+        progressAudio.getBoundingClientRect();
+
+        const percent =
+        (e.clientX - rect.left) / rect.width;
+
+        audio.currentTime =
+        percent * audio.duration;
+    }
+);
 
 </script>
 
