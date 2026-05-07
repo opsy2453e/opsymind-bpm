@@ -8,6 +8,9 @@ import tempfile
 import numpy as np
 import librosa
 
+# 🔥 ДОБАВЛЕНО (пункт 4)
+import soundfile as sf
+
 app = FastAPI()
 
 # 🌍 CORS
@@ -34,7 +37,8 @@ def analyze_audio(path):
         path,
         sr=16000,
         mono=True,
-        duration=15
+        duration=15,
+        res_type="kaiser_fast"  # 🔥 ДОБАВЛЕНО (стабильнее на сервере)
     )
 
     # 🔥 BPM
@@ -55,7 +59,6 @@ def analyze_audio(path):
     chroma_mean = np.mean(chroma, axis=1)
 
     # 🎼 major/minor profiles
-
     major_profile = np.array([
         6.35, 2.23, 3.48, 2.33,
         4.38, 4.09, 2.52, 5.19,
@@ -121,46 +124,27 @@ def home():
 @app.post("/analyze")
 async def analyze(file: UploadFile = File(...)):
 
-    # ❌ check empty file
     if not file.filename:
-        return {
-            "error": "No file uploaded"
-        }
+        return {"error": "No file uploaded"}
 
-    # ❌ size limit
     content = await file.read()
 
     if len(content) > MAX_FILE_SIZE:
-        return {
-            "error": "File too large (max 20MB)"
-        }
+        return {"error": "File too large (max 20MB)"}
 
-    # 📄 extension
     suffix = os.path.splitext(file.filename)[1]
 
-    # 📁 temp file
-    with tempfile.NamedTemporaryFile(
-        delete=False,
-        suffix=suffix
-    ) as tmp:
-
+    with tempfile.NamedTemporaryFile(delete=False, suffix=suffix) as tmp:
         tmp.write(content)
-
         path = tmp.name
 
     try:
-
         result = analyze_audio(path)
-
         return result
 
     except Exception as e:
-
-        return {
-            "error": str(e)
-        }
+        return {"error": str(e)}
 
     finally:
-
         if os.path.exists(path):
             os.remove(path)
