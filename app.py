@@ -8,26 +8,18 @@ import librosa
 
 app = FastAPI()
 
-# 📁 подключаем папку static (для аватарки)
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 
-# 🎧 анализ аудио
 def analyze_audio(path):
-    # ⚡ быстро грузим только часть трека
     y, sr = librosa.load(path, sr=16000, mono=True, duration=15)
 
-    # 🔥 BPM
     tempo = librosa.beat.tempo(y=y, sr=sr)[0]
-
-    # ⚡ энергия
     energy = float(np.mean(np.abs(y))) * 100
 
-    # 🎼 chroma
     chroma = librosa.feature.chroma_stft(y=y, sr=sr)
     chroma_mean = np.mean(chroma, axis=1)
 
-    # 🎼 профили (мажор / минор)
     major_profile = np.array([
         6.35, 2.23, 3.48, 2.33, 4.38, 4.09,
         2.52, 5.19, 2.39, 3.66, 2.29, 2.88
@@ -59,13 +51,11 @@ def analyze_audio(path):
     }
 
 
-# 🌐 главная страница
 @app.get("/")
 def home():
     return FileResponse("index.html")
 
 
-# 📤 загрузка файла
 @app.post("/analyze")
 async def analyze(file: UploadFile = File(...)):
     path = f"temp_{file.filename}"

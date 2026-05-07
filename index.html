@@ -12,11 +12,9 @@ body {
     font-family: 'Segoe UI', sans-serif;
     color: white;
     text-align: center;
-
-    background:
-        radial-gradient(circle at 20% 20%, #1e3a8a, transparent),
-        radial-gradient(circle at 80% 30%, #0ea5e9, transparent),
-        #020617;
+    background: radial-gradient(circle at 20% 20%, #1e3a8a, transparent),
+                radial-gradient(circle at 80% 30%, #0ea5e9, transparent),
+                #020617;
 }
 
 /* контейнер */
@@ -25,38 +23,22 @@ body {
     margin: 80px auto;
     padding: 40px;
     max-width: 720px;
-
     background: rgba(255,255,255,0.06);
     border-radius: 25px;
-
     backdrop-filter: blur(25px);
     border: 1px solid rgba(255,255,255,0.12);
-
     box-shadow: 0 20px 60px rgba(0,0,0,0.6);
     overflow: hidden;
-
-    animation: float 8s ease-in-out infinite;
 }
 
-@keyframes float {
-    0% { transform: translateY(0); }
-    50% { transform: translateY(-6px); }
-    100% { transform: translateY(0); }
+/* hover glow */
+button, .tg-btn, .dropzone {
+    transition: 0.3s ease;
 }
 
-/* блик */
-.container::before {
-    content: "";
-    position: absolute;
-    inset: -50%;
-    background: linear-gradient(110deg, transparent 40%, rgba(255,255,255,0.1), transparent 60%);
-    transform: translateX(-120%) rotate(15deg);
-    transition: 0.8s;
-    pointer-events: none;
-}
-
-.container:hover::before {
-    transform: translateX(120%) rotate(15deg);
+button:hover, .tg-btn:hover, .dropzone:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 20px #38bdf8;
 }
 
 /* header */
@@ -82,43 +64,55 @@ body {
     cursor: pointer;
 }
 
-/* 🎧 player */
+/* PLAYER */
 .glass-player {
     margin-top: 20px;
     padding: 15px;
     border-radius: 15px;
-
-    background: rgba(255,255,255,0.08);
+    background: rgba(0,0,0,0.5);
     backdrop-filter: blur(20px);
-
     display: none;
+    flex-direction: column;
+    gap: 10px;
+    border: 1px solid rgba(255,255,255,0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+/* 🌌 STAR BACKGROUND */
+.star-bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background: black;
+}
+
+canvas#stars {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+}
+
+/* controls layer */
+.player-content {
+    position: relative;
+    z-index: 2;
+    display: flex;
     align-items: center;
     gap: 10px;
-
-    border: 1px solid rgba(255,255,255,0.1);
 }
 
-#playBtn {
-    background: linear-gradient(135deg, #38bdf8, #0ea5e9);
-    border: none;
-    color: white;
-    font-size: 18px;
-    border-radius: 50%;
-    width: 42px;
-    height: 42px;
-    cursor: pointer;
+/* buttons glow */
+#playBtn, #stopBtn {
+    transition: 0.3s;
 }
 
-#stopBtn {
-    background: rgba(255,255,255,0.1);
-    border: none;
-    color: white;
-    border-radius: 50%;
-    width: 35px;
-    height: 35px;
-    cursor: pointer;
+#playBtn:hover, #stopBtn:hover {
+    box-shadow: 0 0 15px #38bdf8;
+    transform: scale(1.1);
 }
 
+/* progress */
 .progress-audio {
     flex: 1;
     height: 6px;
@@ -134,21 +128,21 @@ body {
     background: linear-gradient(90deg, #38bdf8, #0ea5e9);
 }
 
-#time {
-    font-size: 12px;
+/* volume */
+.volume {
+    width: 80px;
 }
 
-/* 🌊 визуализация */
-canvas {
-    display: none;
-    margin-top: 10px;
+/* canvas visualizer inside player */
+canvas#visualizer {
     width: 100%;
     height: 70px;
-    background: #020617;
     border-radius: 10px;
+    z-index: 2;
+    position: relative;
 }
 
-/* карточки */
+/* cards */
 .cards {
     margin-top: 30px;
     display: flex;
@@ -183,7 +177,7 @@ canvas {
     50% { transform: scaleY(1); }
 }
 
-/* кнопка */
+/* button */
 .tg-btn {
     margin-top: 30px;
     display: inline-block;
@@ -210,46 +204,41 @@ footer {
     <h1><i class="ri-headphone-fill"></i> OpsyMind BPM</h1>
 </div>
 
-<div class="dropzone" id="dropzone">
-    📤 Перетащи MP3 или нажми
-</div>
-
+<div class="dropzone" id="dropzone">📤 Перетащи MP3 или нажми</div>
 <input type="file" id="fileInput" hidden>
 
-<!-- 🎧 player -->
+<!-- PLAYER -->
 <div class="glass-player" id="player">
 
-    <button id="playBtn"><i class="ri-play-fill"></i></button>
-
-    <div class="progress-audio" id="progressAudio">
-        <div class="progress-fill" id="progressFill"></div>
+    <div class="star-bg">
+        <canvas id="stars"></canvas>
     </div>
 
-    <span id="time">0:00</span>
+    <div class="player-content">
+        <button id="playBtn"><i class="ri-play-fill"></i></button>
 
-    <button id="stopBtn"><i class="ri-close-line"></i></button>
+        <div class="progress-audio" id="progressAudio">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
 
+        <input type="range" class="volume" id="volume" min="0" max="1" step="0.01">
+
+        <span id="time">0:00</span>
+
+        <button id="stopBtn"><i class="ri-close-line"></i></button>
+    </div>
+
+    <canvas id="visualizer"></canvas>
     <audio id="audio"></audio>
-
 </div>
 
-<canvas id="visualizer"></canvas>
-
 <div class="loader" id="loader">
-    <div class="bar"></div>
-    <div class="bar"></div>
-    <div class="bar"></div>
+    <div class="bar"></div><div class="bar"></div><div class="bar"></div>
 </div>
 
 <div class="cards" id="result"></div>
 
-<a href="https://t.me/OpsyMindBot" target="_blank" class="tg-btn">
-    Открыть бота
-</a>
-
 </div>
-
-<footer>🤖 @OpsyMindBot</footer>
 
 <script>
 const dropzone = document.getElementById("dropzone");
@@ -260,133 +249,118 @@ const player = document.getElementById("player");
 const playBtn = document.getElementById("playBtn");
 const stopBtn = document.getElementById("stopBtn");
 
+const volume = document.getElementById("volume");
+
 const progressFill = document.getElementById("progressFill");
 const progressAudio = document.getElementById("progressAudio");
-const time = document.getElementById("time");
 
 const canvas = document.getElementById("visualizer");
 const ctx = canvas.getContext("2d");
 
-const loader = document.getElementById("loader");
-
 dropzone.onclick = () => fileInput.click();
 fileInput.onchange = () => handle(fileInput.files[0]);
 
+volume.oninput = () => audio.volume = volume.value;
+
 function handle(file){
     const url = URL.createObjectURL(file);
-
     audio.src = url;
-    audio.load();
-
     player.style.display = "flex";
-    canvas.style.display = "block";
-
     visualize();
     upload(file);
 }
 
 /* play */
 playBtn.onclick = () => {
-    if(!audio.src) return;
-
-    if(audio.paused){
-        audio.play();
-        playBtn.innerHTML = '<i class="ri-pause-fill"></i>';
-    } else {
-        audio.pause();
-        playBtn.innerHTML = '<i class="ri-play-fill"></i>';
-    }
+    audio.paused ? audio.play() : audio.pause();
 };
 
-/* stop/reset */
+/* stop */
 stopBtn.onclick = () => {
     audio.pause();
     audio.currentTime = 0;
-    audio.src = "";
-
     player.style.display = "none";
-    canvas.style.display = "none";
-
-    progressFill.style.width = "0%";
-    time.innerText = "0:00";
-
-    document.getElementById("result").innerHTML = "";
 };
 
-/* прогресс */
+/* progress */
 audio.ontimeupdate = () => {
-    let percent = (audio.currentTime / audio.duration) * 100;
-    progressFill.style.width = percent + "%";
-
-    let min = Math.floor(audio.currentTime / 60);
-    let sec = Math.floor(audio.currentTime % 60);
-    if(sec < 10) sec = "0"+sec;
-
-    time.innerText = `${min}:${sec}`;
+    let p = (audio.currentTime / audio.duration) * 100;
+    progressFill.style.width = p + "%";
 };
 
-/* перемотка */
-progressAudio.onclick = e => {
-    let width = progressAudio.clientWidth;
-    let clickX = e.offsetX;
-    audio.currentTime = (clickX / width) * audio.duration;
-};
-
-/* загрузка */
+/* upload */
 function upload(file){
-    loader.style.display = "block";
-    document.getElementById("result").innerHTML = "";
+    const fd = new FormData();
+    fd.append("file", file);
 
-    const formData = new FormData();
-    formData.append("file", file);
-
-    fetch("/analyze", {
-        method: "POST",
-        body: formData
-    })
-    .then(res => res.json())
-    .then(data=>{
-        loader.style.display = "none";
-
-        document.getElementById("result").innerHTML = `
-            <div class="card">BPM: ${data.bpm}</div>
-            <div class="card">Key: ${data.key}</div>
-            <div class="card">Energy: ${data.energy}</div>
-        `;
+    fetch("/analyze", {method:"POST", body:fd})
+    .then(r=>r.json())
+    .then(d=>{
+        document.getElementById("result").innerHTML =
+        `<div class="card">BPM: ${d.bpm}</div>
+         <div class="card">Key: ${d.key}</div>
+         <div class="card">Energy: ${d.energy}</div>`;
     });
 }
 
-/* визуализация */
+/* visualizer */
 function visualize(){
-    const audioCtx = new AudioContext();
-    const src = audioCtx.createMediaElementSource(audio);
-    const analyser = audioCtx.createAnalyser();
+    const ctxA = new AudioContext();
+    const src = ctxA.createMediaElementSource(audio);
+    const analyser = ctxA.createAnalyser();
 
     src.connect(analyser);
-    analyser.connect(audioCtx.destination);
+    analyser.connect(ctxA.destination);
 
     analyser.fftSize = 64;
-    const dataArray = new Uint8Array(analyser.frequencyBinCount);
+    const data = new Uint8Array(analyser.frequencyBinCount);
 
     canvas.width = 700;
     canvas.height = 70;
 
     function draw(){
         requestAnimationFrame(draw);
-        analyser.getByteFrequencyData(dataArray);
+        analyser.getByteFrequencyData(data);
 
         ctx.clearRect(0,0,canvas.width,canvas.height);
 
-        let barWidth = canvas.width / dataArray.length;
+        let w = canvas.width / data.length;
 
-        for(let i=0;i<dataArray.length;i++){
-            let h = dataArray[i]/2;
+        for(let i=0;i<data.length;i++){
+            let h = data[i]/2;
             ctx.fillStyle = "#38bdf8";
-            ctx.fillRect(i*barWidth, canvas.height-h, barWidth-2, h);
+            ctx.fillRect(i*w, canvas.height-h, w-2, h);
         }
     }
     draw();
 }
+
+/* STAR BACKGROUND */
+const stars = document.getElementById("stars");
+const sctx = stars.getContext("2d");
+
+stars.width = 700;
+stars.height = 140;
+
+let starArr = Array.from({length:80},()=>({
+    x:Math.random()*700,
+    y:Math.random()*140,
+    r:Math.random()*1.5
+}));
+
+function starAnim(){
+    requestAnimationFrame(starAnim);
+    sctx.fillStyle="black";
+    sctx.fillRect(0,0,700,140);
+
+    sctx.fillStyle="white";
+    starArr.forEach(s=>{
+        sctx.beginPath();
+        sctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+        sctx.fill();
+    });
+}
+starAnim();
 </script>
 
 </body>
