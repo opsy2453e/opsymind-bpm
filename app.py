@@ -6,10 +6,6 @@ import os
 import numpy as np
 import librosa
 
-# 🔥 FIX 0: защита от предупреждений librosa/resampy
-import warnings
-warnings.filterwarnings("ignore")
-
 app = FastAPI()
 
 # 📁 static
@@ -19,26 +15,15 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 # 🎧 анализ аудио
 def analyze_audio(path):
 
-    # 🔥 FIX 1: стабильная загрузка mp3 на сервере (ffmpeg fallback)
-    y, sr = librosa.load(
-        path,
-        sr=16000,
-        mono=True,
-        duration=15,
-        res_type="kaiser_fast"
-    )
+    y, sr = librosa.load(path, sr=16000, mono=True, duration=15)
 
-    # 🔥 FIX 2: безопасный BPM (разные версии librosa)
+    # 🔥 FIX 1: безопасный BPM (librosa версии разные)
     tempo_result = librosa.beat.beat_track(y=y, sr=sr)
 
     if isinstance(tempo_result, tuple):
         tempo = tempo_result[0]
     else:
         tempo = tempo_result
-
-    # 🔥 FIX 3: защита от None
-    if tempo is None:
-        tempo = 0
 
     # ⚡ energy
     energy = float(np.mean(np.abs(y))) * 100
@@ -75,7 +60,7 @@ def analyze_audio(path):
             minor_profile
         )[0, 1]
 
-        # 🔥 FIX 4: защита от NaN (главная причина crash)
+        # 🔥 FIX 2: защита от nan
         if np.isnan(major_score):
             major_score = -999
         if np.isnan(minor_score):
@@ -89,8 +74,8 @@ def analyze_audio(path):
     key = f"{best[1]} {best[2]}"
 
     return {
-        # 🔥 FIX 5: безопасный cast (чтобы фронт НИКОГДА не видел undefined)
-        "bpm": round(float(tempo), 1),
+        # 🔥 FIX 3: защита типов (frontend не падает)
+        "bpm": round(float(tempo), 1) if tempo else 0,
         "key": key,
         "energy": round(float(energy), 1)
     }
@@ -121,12 +106,12 @@ async def analyze(file: UploadFile = File(...)):
 
     except Exception as e:
 
-        # 🔥 FIX 6: ВСЕГДА JSON (никогда не ломает frontend)
+        # 🔥 FIX 4: всегда JSON, чтобы фронт не ломался
         return {
+            "error": str(e),
             "bpm": 0,
             "key": "unknown",
-            "energy": 0,
-            "error": str(e)
+            "energy": 0
         }
 
     finally:
