@@ -2,82 +2,202 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>OpsyMind BPM</title>
 
 <link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
 
 <style>
-
-/* ===== ВСЁ ТВОЁ CSS БЕЗ ИЗМЕНЕНИЙ ===== */
-
-*{
-    box-sizing:border-box;
-}
-
-body{
-    margin:0;
-    font-family:'Segoe UI',sans-serif;
-    color:white;
-    text-align:center;
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    color: white;
+    text-align: center;
 
     background:
         radial-gradient(circle at 20% 20%, #1e3a8a, transparent),
         radial-gradient(circle at 80% 30%, #0ea5e9, transparent),
         #020617;
-
-    min-height:100vh;
 }
 
-.container{
-    position:relative;
-    margin:70px auto;
-    padding:40px;
-    max-width:760px;
-    background:rgba(255,255,255,0.06);
-    border-radius:28px;
-    backdrop-filter:blur(25px);
-    border:1px solid rgba(255,255,255,0.12);
-    box-shadow:0 20px 60px rgba(0,0,0,0.6);
+/* контейнер */
+.container {
+    position: relative;
+    margin: 80px auto;
+    padding: 40px;
+    max-width: 720px;
+
+    background: rgba(255,255,255,0.06);
+    border-radius: 25px;
+
+    backdrop-filter: blur(25px);
+    border: 1px solid rgba(255,255,255,0.12);
+
+    box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+    overflow: hidden;
+
+    animation: float 8s ease-in-out infinite;
 }
 
-.dropzone{
-    margin-top:34px;
-    border:2px dashed rgba(56,189,248,0.55);
-    padding:42px;
-    border-radius:20px;
-    cursor:pointer;
+@keyframes float {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+    100% { transform: translateY(0); }
 }
 
-.glass-player{
-    margin-top:24px;
-    padding:18px;
-    border-radius:28px;
-    background:linear-gradient(145deg, rgba(255,255,255,0.09), rgba(255,255,255,0.04));
-    display:none;
-    flex-direction:column;
+/* блик */
+.container::before {
+    content: "";
+    position: absolute;
+    inset: -50%;
+    background: linear-gradient(110deg, transparent 40%, rgba(255,255,255,0.1), transparent 60%);
+    transform: translateX(-120%) rotate(15deg);
+    transition: 0.8s;
+    pointer-events: none;
 }
 
-.visual-wrap{
-    height:120px;
+.container:hover::before {
+    transform: translateX(120%) rotate(15deg);
 }
 
-canvas{
-    width:100%;
-    height:120px;
+/* header */
+.header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
 }
 
-.card{
-    background:rgba(255,255,255,0.05);
-    padding:20px 26px;
-    border-radius:18px;
-    margin:10px;
+.logo {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
 }
 
-.loader{
-    display:none;
+/* dropzone */
+.dropzone {
+    margin-top: 30px;
+    border: 2px dashed rgba(56,189,248,0.6);
+    padding: 40px;
+    border-radius: 15px;
+    cursor: pointer;
 }
 
+/* 🎧 player */
+.glass-player {
+    margin-top: 20px;
+    padding: 15px;
+    border-radius: 15px;
+
+    background: rgba(255,255,255,0.08);
+    backdrop-filter: blur(20px);
+
+    display: none;
+    align-items: center;
+    gap: 10px;
+
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+#playBtn {
+    background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+    border: none;
+    color: white;
+    font-size: 18px;
+    border-radius: 50%;
+    width: 42px;
+    height: 42px;
+    cursor: pointer;
+}
+
+#stopBtn {
+    background: rgba(255,255,255,0.1);
+    border: none;
+    color: white;
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    cursor: pointer;
+}
+
+.progress-audio {
+    flex: 1;
+    height: 6px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 10px;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.progress-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #38bdf8, #0ea5e9);
+}
+
+#time {
+    font-size: 12px;
+}
+
+/* 🌊 визуализация */
+canvas {
+    display: none;
+    margin-top: 10px;
+    width: 100%;
+    height: 70px;
+    background: #020617;
+    border-radius: 10px;
+}
+
+/* карточки */
+.cards {
+    margin-top: 30px;
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+
+.card {
+    background: rgba(255,255,255,0.05);
+    padding: 20px;
+    margin: 10px;
+    border-radius: 15px;
+}
+
+/* loader */
+.loader {
+    margin-top: 30px;
+    display: none;
+}
+
+.bar {
+    width: 6px;
+    height: 40px;
+    background: #38bdf8;
+    margin: 0 3px;
+    display: inline-block;
+    animation: bounce 1s infinite;
+}
+
+@keyframes bounce {
+    0%,100% { transform: scaleY(0.3); }
+    50% { transform: scaleY(1); }
+}
+
+/* кнопка */
+.tg-btn {
+    margin-top: 30px;
+    display: inline-block;
+    padding: 12px 25px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+    color: white;
+    text-decoration: none;
+}
+
+/* footer */
+footer {
+    margin-top: 40px;
+}
 </style>
 </head>
 
@@ -85,63 +205,135 @@ canvas{
 
 <div class="container">
 
-    <div class="header">
-        <h1>OpsyMind BPM</h1>
+<div class="header">
+    <img src="/static/avatar.png" class="logo">
+    <h1><i class="ri-headphone-fill"></i> OpsyMind BPM</h1>
+</div>
+
+<div class="dropzone" id="dropzone">
+    📤 Перетащи MP3 или нажми
+</div>
+
+<input type="file" id="fileInput" hidden>
+
+<!-- 🎧 player -->
+<div class="glass-player" id="player">
+
+    <button id="playBtn"><i class="ri-play-fill"></i></button>
+
+    <div class="progress-audio" id="progressAudio">
+        <div class="progress-fill" id="progressFill"></div>
     </div>
 
-    <div class="dropzone" id="dropzone">
-        📤 Перетащи MP3 или нажми
-    </div>
+    <span id="time">0:00</span>
 
-    <input type="file" id="fileInput" hidden>
+    <button id="stopBtn"><i class="ri-close-line"></i></button>
 
-    <div class="glass-player" id="player">
-
-        <div class="visual-wrap">
-            <canvas id="visualizer"></canvas>
-        </div>
-
-        <audio id="audio"></audio>
-
-    </div>
-
-    <div class="loader" id="loader">
-        Loading...
-    </div>
-
-    <div class="cards" id="result"></div>
+    <audio id="audio"></audio>
 
 </div>
 
+<canvas id="visualizer"></canvas>
+
+<div class="loader" id="loader">
+    <div class="bar"></div>
+    <div class="bar"></div>
+    <div class="bar"></div>
+</div>
+
+<div class="cards" id="result"></div>
+
+<a href="https://t.me/OpsyMindBot" target="_blank" class="tg-btn">
+    Открыть бота
+</a>
+
+</div>
+
+<footer>🤖 @OpsyMindBot</footer>
+
 <script>
-
-/* ===== ТВОЙ JS (НЕ ТРОГАЛ, ТОЛЬКО FIX) ===== */
-
 const dropzone = document.getElementById("dropzone");
 const fileInput = document.getElementById("fileInput");
+
 const audio = document.getElementById("audio");
 const player = document.getElementById("player");
+const playBtn = document.getElementById("playBtn");
+const stopBtn = document.getElementById("stopBtn");
+
+const progressFill = document.getElementById("progressFill");
+const progressAudio = document.getElementById("progressAudio");
+const time = document.getElementById("time");
+
+const canvas = document.getElementById("visualizer");
+const ctx = canvas.getContext("2d");
+
 const loader = document.getElementById("loader");
 
 dropzone.onclick = () => fileInput.click();
-
 fileInput.onchange = () => handle(fileInput.files[0]);
 
 function handle(file){
-
     const url = URL.createObjectURL(file);
 
     audio.src = url;
     audio.load();
 
     player.style.display = "flex";
+    canvas.style.display = "block";
 
+    visualize();
     upload(file);
 }
 
-/* UPLOAD */
-function upload(file){
+/* play */
+playBtn.onclick = () => {
+    if(!audio.src) return;
 
+    if(audio.paused){
+        audio.play();
+        playBtn.innerHTML = '<i class="ri-pause-fill"></i>';
+    } else {
+        audio.pause();
+        playBtn.innerHTML = '<i class="ri-play-fill"></i>';
+    }
+};
+
+/* stop/reset */
+stopBtn.onclick = () => {
+    audio.pause();
+    audio.currentTime = 0;
+    audio.src = "";
+
+    player.style.display = "none";
+    canvas.style.display = "none";
+
+    progressFill.style.width = "0%";
+    time.innerText = "0:00";
+
+    document.getElementById("result").innerHTML = "";
+};
+
+/* прогресс */
+audio.ontimeupdate = () => {
+    let percent = (audio.currentTime / audio.duration) * 100;
+    progressFill.style.width = percent + "%";
+
+    let min = Math.floor(audio.currentTime / 60);
+    let sec = Math.floor(audio.currentTime % 60);
+    if(sec < 10) sec = "0"+sec;
+
+    time.innerText = `${min}:${sec}`;
+};
+
+/* перемотка */
+progressAudio.onclick = e => {
+    let width = progressAudio.clientWidth;
+    let clickX = e.offsetX;
+    audio.currentTime = (clickX / width) * audio.duration;
+};
+
+/* загрузка */
+function upload(file){
     loader.style.display = "block";
     document.getElementById("result").innerHTML = "";
 
@@ -153,37 +345,48 @@ function upload(file){
         body: formData
     })
     .then(res => res.json())
-    .then(data => {
-
-        loader.style.display = "none";
-
-        /* ✅ FIX: защита от undefined */
-        document.getElementById("result").innerHTML = `
-            <div class="card">
-                BPM: ${data?.bpm ?? "—"}
-            </div>
-
-            <div class="card">
-                Key: ${data?.key ?? "—"}
-            </div>
-
-            <div class="card">
-                Energy: ${data?.energy ?? "—"}
-            </div>
-        `;
-    })
-    .catch(() => {
-
+    .then(data=>{
         loader.style.display = "none";
 
         document.getElementById("result").innerHTML = `
-            <div class="card">
-                Error loading data
-            </div>
+            <div class="card">BPM: ${data.bpm}</div>
+            <div class="card">Key: ${data.key}</div>
+            <div class="card">Energy: ${data.energy}</div>
         `;
     });
 }
 
+/* визуализация */
+function visualize(){
+    const audioCtx = new AudioContext();
+    const src = audioCtx.createMediaElementSource(audio);
+    const analyser = audioCtx.createAnalyser();
+
+    src.connect(analyser);
+    analyser.connect(audioCtx.destination);
+
+    analyser.fftSize = 64;
+    const dataArray = new Uint8Array(analyser.frequencyBinCount);
+
+    canvas.width = 700;
+    canvas.height = 70;
+
+    function draw(){
+        requestAnimationFrame(draw);
+        analyser.getByteFrequencyData(dataArray);
+
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+
+        let barWidth = canvas.width / dataArray.length;
+
+        for(let i=0;i<dataArray.length;i++){
+            let h = dataArray[i]/2;
+            ctx.fillStyle = "#38bdf8";
+            ctx.fillRect(i*barWidth, canvas.height-h, barWidth-2, h);
+        }
+    }
+    draw();
+}
 </script>
 
 </body>
