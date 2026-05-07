@@ -131,7 +131,7 @@ body{
     box-shadow:
     0 20px 60px rgba(0,0,0,0.35);
 
-    overflow:hidden;
+    overflow:visible;
 
     transform-style:preserve-3d;
 
@@ -239,7 +239,7 @@ body{
 
     position:relative;
 
-    z-index:10;
+    z-index:50;
 }
 
 .dropzone:hover{
@@ -671,63 +671,6 @@ footer{
 
     <input type="file" id="fileInput" hidden>
 
-    <div class="glass-player" id="player">
-
-        <div class="ambient-wave"></div>
-
-        <button id="playBtn">
-            <i class="ri-play-fill"></i>
-        </button>
-
-        <canvas id="visualizer"></canvas>
-
-        <div class="progress-audio" id="progressAudio">
-            <div class="progress-fill" id="progressFill"></div>
-        </div>
-
-        <span id="time">0:00</span>
-
-        <div class="volume-box">
-
-            <i class="ri-volume-up-line"></i>
-
-            <input
-            type="range"
-            id="volumeSlider"
-            min="0"
-            max="1"
-            step="0.01"
-            value="1"
-            >
-
-        </div>
-
-        <button id="stopBtn">
-            <i class="ri-close-line"></i>
-        </button>
-
-        <audio id="audio"></audio>
-
-    </div>
-
-    <div class="loader" id="loader">
-
-        <div class="bar"></div>
-        <div class="bar"></div>
-        <div class="bar"></div>
-
-    </div>
-
-    <div class="cards" id="result"></div>
-
-    <a
-    href="https://t.me/OpsyMindBot"
-    target="_blank"
-    class="tg-btn"
-    >
-        Открыть бота
-    </a>
-
 </div>
 
 <footer>
@@ -737,7 +680,161 @@ footer{
 <script>
 
 /* =========================
-   ELEMENTS
+   FILE UPLOAD
+========================= */
+
+const dropzone =
+document.getElementById("dropzone");
+
+const fileInput =
+document.getElementById("fileInput");
+
+dropzone.addEventListener(
+    "click",
+    () => {
+        fileInput.click();
+    }
+);
+
+dropzone.addEventListener(
+    "mouseenter",
+    () => {
+        dropzone.style.transform =
+        "translateY(-2px) scale(1.01)";
+    }
+);
+
+dropzone.addEventListener(
+    "mouseleave",
+    () => {
+        dropzone.style.transform =
+        "translateY(0px) scale(1)";
+    }
+);
+
+/* =========================
+   BACKGROUND
+========================= */
+
+const bgCanvas =
+document.getElementById("bgCanvas");
+
+const bgCtx =
+bgCanvas.getContext("2d");
+
+function resizeBG(){
+
+    bgCanvas.width =
+    window.innerWidth;
+
+    bgCanvas.height =
+    window.innerHeight;
+}
+
+resizeBG();
+
+window.addEventListener(
+    "resize",
+    resizeBG
+);
+
+const particles = [];
+
+for(let i=0;i<140;i++){
+
+    particles.push({
+
+        x:Math.random()*bgCanvas.width,
+
+        y:Math.random()*bgCanvas.height,
+
+        r:Math.random()*2 + 0.4,
+
+        sx:(Math.random()-0.5)*0.25,
+
+        sy:(Math.random()-0.5)*0.25,
+
+        a:Math.random()
+    });
+}
+
+function animateBG(){
+
+    requestAnimationFrame(
+        animateBG
+    );
+
+    bgCtx.clearRect(
+        0,
+        0,
+        bgCanvas.width,
+        bgCanvas.height
+    );
+
+    bgCtx.strokeStyle =
+    "rgba(125,211,252,.08)";
+
+    for(let x=0;x<bgCanvas.width;x+=45){
+
+        bgCtx.beginPath();
+
+        bgCtx.moveTo(x,0);
+
+        bgCtx.lineTo(x,bgCanvas.height);
+
+        bgCtx.stroke();
+    }
+
+    for(let y=0;y<bgCanvas.height;y+=45){
+
+        bgCtx.beginPath();
+
+        bgCtx.moveTo(0,y);
+
+        bgCtx.lineTo(bgCanvas.width,y);
+
+        bgCtx.stroke();
+    }
+
+    particles.forEach(p=>{
+
+        bgCtx.beginPath();
+
+        bgCtx.arc(
+            p.x,
+            p.y,
+            p.r,
+            0,
+            Math.PI*2
+        );
+
+        bgCtx.fillStyle =
+        `rgba(186,230,253,${p.a})`;
+
+        bgCtx.shadowBlur = 15;
+
+        bgCtx.shadowColor =
+        "rgba(125,211,252,.8)";
+
+        bgCtx.fill();
+
+        bgCtx.shadowBlur = 0;
+
+        p.x += p.sx;
+        p.y += p.sy;
+
+        if(p.x < 0) p.x = bgCanvas.width;
+        if(p.x > bgCanvas.width) p.x = 0;
+
+        if(p.y < 0) p.y = bgCanvas.height;
+        if(p.y > bgCanvas.height) p.y = 0;
+    });
+}
+
+animateBG();
+
+/* =========================
+   PARALLAX
 ========================= */
 
 const container =
@@ -746,17 +843,11 @@ document.getElementById("container");
 const cursorGlow =
 document.getElementById("cursorGlow");
 
-/* =========================
-   PREMIUM SMOOTH PARALLAX
-========================= */
-
 let targetX = 0;
 let targetY = 0;
 
 let currentX = 0;
 let currentY = 0;
-
-/* mouse tracking */
 
 document.addEventListener(
     "mousemove",
@@ -776,8 +867,6 @@ document.addEventListener(
     }
 );
 
-/* smooth animation */
-
 function animateContainer(){
 
     requestAnimationFrame(
@@ -796,14 +885,10 @@ function animateContainer(){
     perspective(1800px)
     rotateY(${-currentX}deg)
     rotateX(${currentY}deg)
-    translateY(-2px)
-    scale(1.002)
     `;
 }
 
 animateContainer();
-
-/* reset */
 
 document.addEventListener(
     "mouseleave",
