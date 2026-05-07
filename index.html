@@ -12,27 +12,124 @@ rel="stylesheet"
 
 <style>
 
+*{
+    box-sizing:border-box;
+}
+
 body{
     margin:0;
     font-family:'Segoe UI',sans-serif;
     color:white;
     text-align:center;
-    overflow-x:hidden;
-    background:#020617;
+    overflow:hidden;
+
+    background:
+    radial-gradient(circle at top,#0f172a 0%,#111827 35%,#1e293b 100%);
 }
 
-/* cyber background */
+/* =========================
+   BACKGROUND
+========================= */
 
 #bgCanvas{
     position:fixed;
     inset:0;
     width:100%;
     height:100%;
-    z-index:-2;
-    background:#020617;
+    z-index:-5;
 }
 
-/* container */
+/* neon rings */
+
+.ring{
+
+    position:fixed;
+
+    border-radius:50%;
+
+    pointer-events:none;
+
+    filter:blur(1px);
+
+    opacity:.22;
+
+    animation:
+    rotateRing linear infinite;
+}
+
+.ring1{
+
+    width:600px;
+    height:600px;
+
+    border:
+    1px solid rgba(125,211,252,.16);
+
+    top:-200px;
+    left:-200px;
+
+    animation-duration:40s;
+}
+
+.ring2{
+
+    width:900px;
+    height:900px;
+
+    border:
+    1px solid rgba(56,189,248,.08);
+
+    bottom:-300px;
+    right:-300px;
+
+    animation-duration:65s;
+}
+
+@keyframes rotateRing{
+
+    from{
+        transform:rotate(0deg);
+    }
+
+    to{
+        transform:rotate(360deg);
+    }
+}
+
+/* cursor glow */
+
+.cursor-glow{
+
+    position:fixed;
+
+    width:280px;
+    height:280px;
+
+    border-radius:50%;
+
+    pointer-events:none;
+
+    background:
+    radial-gradient(
+        circle,
+        rgba(125,211,252,.16),
+        transparent 70%
+    );
+
+    transform:
+    translate(-50%,-50%);
+
+    z-index:-1;
+
+    filter:blur(20px);
+
+    transition:
+    transform .08s linear;
+}
+
+/* =========================
+   CONTAINER
+========================= */
 
 .container{
 
@@ -44,7 +141,7 @@ body{
 
     max-width:720px;
 
-    background:rgba(255,255,255,0.06);
+    background:rgba(255,255,255,0.08);
 
     border-radius:25px;
 
@@ -52,29 +149,41 @@ body{
 
     border:1px solid rgba(255,255,255,0.12);
 
-    box-shadow:0 20px 60px rgba(0,0,0,0.6);
+    box-shadow:
+    0 20px 60px rgba(0,0,0,0.35);
 
     overflow:hidden;
 
-    animation:float 8s ease-in-out infinite;
+    transform-style:preserve-3d;
+
+    animation:
+    intro 1.5s ease;
 }
 
-@keyframes float{
+/* intro */
 
-    0%{
-        transform:translateY(0);
+@keyframes intro{
+
+    from{
+
+        opacity:0;
+
+        transform:
+        translateY(60px)
+        scale(.96);
     }
 
-    50%{
-        transform:translateY(-6px);
-    }
+    to{
 
-    100%{
-        transform:translateY(0);
+        opacity:1;
+
+        transform:
+        translateY(0)
+        scale(1);
     }
 }
 
-/* shine */
+/* reflections */
 
 .container::before{
 
@@ -88,23 +197,29 @@ body{
     linear-gradient(
         110deg,
         transparent 40%,
-        rgba(255,255,255,0.1),
+        rgba(255,255,255,.12),
         transparent 60%
     );
 
-    transform:translateX(-120%) rotate(15deg);
+    transform:
+    translateX(-120%)
+    rotate(15deg);
 
-    transition:0.8s;
+    transition:1s;
 
     pointer-events:none;
 }
 
 .container:hover::before{
 
-    transform:translateX(120%) rotate(15deg);
+    transform:
+    translateX(120%)
+    rotate(15deg);
 }
 
-/* header */
+/* =========================
+   HEADER
+========================= */
 
 .header{
 
@@ -120,19 +235,23 @@ body{
 .logo{
 
     width:70px;
-
     height:70px;
 
     border-radius:50%;
+
+    box-shadow:
+    0 0 25px rgba(125,211,252,.25);
 }
 
-/* dropzone */
+/* =========================
+   DROPZONE
+========================= */
 
 .dropzone{
 
     margin-top:30px;
 
-    border:2px dashed rgba(56,189,248,0.6);
+    border:2px dashed rgba(125,211,252,0.45);
 
     padding:40px;
 
@@ -140,20 +259,26 @@ body{
 
     cursor:pointer;
 
-    transition:all .35s ease;
+    transition:.35s;
 }
 
 .dropzone:hover{
 
-    border-color:#38bdf8;
+    transform:translateY(-2px);
 
-    background:rgba(56,189,248,0.06);
+    border-color:#7dd3fc;
+
+    background:
+    rgba(125,211,252,0.06);
 
     box-shadow:
-    inset 0 0 25px rgba(56,189,248,.15);
+    inset 0 0 30px rgba(125,211,252,.15),
+    0 0 20px rgba(125,211,252,.08);
 }
 
-/* player */
+/* =========================
+   PLAYER
+========================= */
 
 .glass-player{
 
@@ -179,18 +304,20 @@ body{
 
     overflow:hidden;
 
-    transition:0.4s ease;
+    transition:.4s;
 }
 
 .glass-player:hover{
 
-    transform:translateY(-2px) scale(1.01);
+    transform:
+    translateY(-2px)
+    scale(1.01);
 
     box-shadow:
-    0 10px 40px rgba(56,189,248,0.25);
+    0 10px 40px rgba(125,211,252,.22);
 }
 
-/* ambient wave */
+/* ambient */
 
 .ambient-wave{
 
@@ -202,19 +329,19 @@ body{
 
     radial-gradient(
         circle at 20% 20%,
-        rgba(56,189,248,.20),
+        rgba(125,211,252,.18),
         transparent 30%
     ),
 
     radial-gradient(
         circle at 80% 30%,
-        rgba(14,165,233,.18),
+        rgba(56,189,248,.16),
         transparent 35%
     ),
 
     radial-gradient(
         circle at 50% 80%,
-        rgba(125,211,252,.14),
+        rgba(186,230,253,.12),
         transparent 40%
     );
 
@@ -231,52 +358,13 @@ body{
     0%{
         transform:
         rotate(0deg)
-        scale(1)
-        translateY(0px);
+        scale(1);
     }
 
-    50%{
+    100%{
         transform:
         rotate(8deg)
-        scale(1.1)
-        translateY(-10px);
-    }
-
-    100%{
-        transform:
-        rotate(-8deg)
-        scale(1.05)
-        translateY(8px);
-    }
-}
-
-/* player shine */
-
-.glass-player::after{
-
-    content:'';
-
-    position:absolute;
-
-    inset:0;
-
-    background:
-    linear-gradient(
-        120deg,
-        transparent,
-        rgba(255,255,255,.06),
-        transparent
-    );
-
-    transform:translateX(-100%);
-
-    animation:shine 6s linear infinite;
-}
-
-@keyframes shine{
-
-    100%{
-        transform:translateX(100%);
+        scale(1.08);
     }
 }
 
@@ -287,8 +375,8 @@ body{
     background:
     linear-gradient(
         135deg,
-        #38bdf8,
-        #0ea5e9
+        #7dd3fc,
+        #38bdf8
     );
 
     border:none;
@@ -300,7 +388,6 @@ body{
     border-radius:50%;
 
     width:42px;
-
     height:42px;
 
     cursor:pointer;
@@ -315,12 +402,13 @@ body{
     transform:scale(1.12);
 
     box-shadow:
-    0 0 25px rgba(56,189,248,.8);
+    0 0 25px rgba(125,211,252,.7);
 }
 
 #stopBtn{
 
-    background:rgba(255,255,255,0.1);
+    background:
+    rgba(255,255,255,0.1);
 
     border:none;
 
@@ -329,7 +417,6 @@ body{
     border-radius:50%;
 
     width:35px;
-
     height:35px;
 
     cursor:pointer;
@@ -341,17 +428,19 @@ body{
 
 #stopBtn:hover{
 
-    transform:scale(1.12) rotate(90deg);
+    transform:
+    scale(1.12)
+    rotate(90deg);
 
-    background:rgba(255,255,255,0.2);
+    background:
+    rgba(255,255,255,0.2);
 }
 
-/* FFT canvas */
+/* fft */
 
 canvas{
 
     width:140px;
-
     height:42px;
 
     border-radius:12px;
@@ -361,13 +450,15 @@ canvas{
     z-index:2;
 
     background:
-    radial-gradient(circle at center,#020617,#000);
+    radial-gradient(
+        circle at center,
+        #111827,
+        #020617
+    );
 
     box-shadow:
-    inset 0 0 25px rgba(0,0,0,.9),
-    0 0 20px rgba(56,189,248,.08);
-
-    position:relative;
+    inset 0 0 25px rgba(0,0,0,.7),
+    0 0 20px rgba(125,211,252,.08);
 
     overflow:hidden;
 }
@@ -380,7 +471,8 @@ canvas{
 
     height:6px;
 
-    background:rgba(255,255,255,0.1);
+    background:
+    rgba(255,255,255,0.1);
 
     border-radius:10px;
 
@@ -402,8 +494,8 @@ canvas{
     background:
     linear-gradient(
         90deg,
-        #38bdf8,
-        #0ea5e9
+        #7dd3fc,
+        #38bdf8
     );
 }
 
@@ -429,13 +521,6 @@ canvas{
     z-index:2;
 }
 
-.volume-box i{
-
-    color:#7dd3fc;
-
-    font-size:18px;
-}
-
 #volumeSlider{
 
     appearance:none;
@@ -446,13 +531,10 @@ canvas{
 
     border-radius:20px;
 
-    background:rgba(255,255,255,0.15);
+    background:
+    rgba(255,255,255,0.15);
 
     outline:none;
-
-    overflow:hidden;
-
-    cursor:pointer;
 }
 
 #volumeSlider::-webkit-slider-thumb{
@@ -460,27 +542,14 @@ canvas{
     appearance:none;
 
     width:14px;
-
     height:14px;
 
     border-radius:50%;
 
-    background:#38bdf8;
-
-    box-shadow:-100px 0 0 95px #38bdf8;
-
-    cursor:pointer;
-
-    transition:.25s;
-}
-
-#volumeSlider::-webkit-slider-thumb:hover{
-
-    transform:scale(1.2);
+    background:#7dd3fc;
 
     box-shadow:
-    -100px 0 0 95px #38bdf8,
-    0 0 15px #38bdf8;
+    -100px 0 0 95px #7dd3fc;
 }
 
 /* cards */
@@ -498,7 +567,8 @@ canvas{
 
 .card{
 
-    background:rgba(255,255,255,0.05);
+    background:
+    rgba(255,255,255,0.05);
 
     padding:20px;
 
@@ -511,10 +581,11 @@ canvas{
 
 .card:hover{
 
-    transform:translateY(-4px);
+    transform:
+    translateY(-4px);
 
     box-shadow:
-    0 10px 30px rgba(56,189,248,.18);
+    0 10px 30px rgba(125,211,252,.16);
 }
 
 /* loader */
@@ -529,10 +600,9 @@ canvas{
 .bar{
 
     width:6px;
-
     height:40px;
 
-    background:#38bdf8;
+    background:#7dd3fc;
 
     margin:0 3px;
 
@@ -552,7 +622,7 @@ canvas{
     }
 }
 
-/* telegram button */
+/* tg */
 
 .tg-btn{
 
@@ -567,8 +637,8 @@ canvas{
     background:
     linear-gradient(
         135deg,
-        #38bdf8,
-        #0ea5e9
+        #7dd3fc,
+        #38bdf8
     );
 
     color:white;
@@ -580,13 +650,12 @@ canvas{
 
 .tg-btn:hover{
 
-    transform:translateY(-3px);
+    transform:
+    translateY(-3px);
 
     box-shadow:
-    0 10px 30px rgba(14,165,233,.45);
+    0 10px 30px rgba(125,211,252,.35);
 }
-
-/* footer */
 
 footer{
     margin-top:40px;
@@ -597,11 +666,18 @@ footer{
 
 <body>
 
-<!-- CYBER BACKGROUND -->
+<!-- BACKGROUND -->
 
 <canvas id="bgCanvas"></canvas>
 
-<div class="container">
+<div class="ring ring1"></div>
+<div class="ring ring2"></div>
+
+<div class="cursor-glow" id="cursorGlow"></div>
+
+<!-- APP -->
+
+<div class="container" id="container">
 
     <div class="header">
 
@@ -622,8 +698,6 @@ footer{
     </div>
 
     <input type="file" id="fileInput" hidden>
-
-    <!-- PLAYER -->
 
     <div class="glass-player" id="player">
 
@@ -664,8 +738,6 @@ footer{
 
     </div>
 
-    <!-- loader -->
-
     <div class="loader" id="loader">
 
         <div class="bar"></div>
@@ -674,11 +746,7 @@ footer{
 
     </div>
 
-    <!-- results -->
-
     <div class="cards" id="result"></div>
-
-    <!-- tg -->
 
     <a
     href="https://t.me/OpsyMindBot"
@@ -700,218 +768,226 @@ footer{
    ELEMENTS
 ========================= */
 
-const dropzone =
-document.getElementById("dropzone");
+const container =
+document.getElementById("container");
 
-const fileInput =
-document.getElementById("fileInput");
+const cursorGlow =
+document.getElementById("cursorGlow");
+
+const bgCanvas =
+document.getElementById("bgCanvas");
+
+const bgCtx =
+bgCanvas.getContext("2d");
+
+/* =========================
+   PARALLAX + CURSOR GLOW
+========================= */
+
+document.addEventListener(
+    "mousemove",
+    e => {
+
+        cursorGlow.style.left =
+        e.clientX + "px";
+
+        cursorGlow.style.top =
+        e.clientY + "px";
+
+        let x =
+        (window.innerWidth/2 - e.clientX)/40;
+
+        let y =
+        (window.innerHeight/2 - e.clientY)/40;
+
+        container.style.transform =
+
+        `
+        rotateY(${-x}deg)
+        rotateX(${y}deg)
+        `;
+    }
+);
+
+document.addEventListener(
+    "mouseleave",
+    () => {
+
+        container.style.transform =
+        "rotateY(0deg) rotateX(0deg)";
+    }
+);
+
+/* =========================
+   CYBER BACKGROUND
+========================= */
+
+function resizeBG(){
+
+    bgCanvas.width =
+    innerWidth;
+
+    bgCanvas.height =
+    innerHeight;
+}
+
+resizeBG();
+
+window.addEventListener(
+    "resize",
+    resizeBG
+);
+
+const particles = [];
+
+for(let i=0;i<140;i++){
+
+    particles.push({
+
+        x:Math.random()*bgCanvas.width,
+
+        y:Math.random()*bgCanvas.height,
+
+        r:Math.random()*2 + 0.4,
+
+        sx:(Math.random()-0.5)*0.25,
+
+        sy:(Math.random()-0.5)*0.25,
+
+        a:Math.random()
+    });
+}
+
+let pulse = 0;
+
+function animateBG(){
+
+    requestAnimationFrame(
+        animateBG
+    );
+
+    bgCtx.clearRect(
+        0,
+        0,
+        bgCanvas.width,
+        bgCanvas.height
+    );
+
+    /* glow */
+
+    const glow =
+    bgCtx.createRadialGradient(
+
+        bgCanvas.width/2,
+        bgCanvas.height/2,
+        0,
+
+        bgCanvas.width/2,
+        bgCanvas.height/2,
+        bgCanvas.width/1.2
+    );
+
+    glow.addColorStop(
+        0,
+        `rgba(125,211,252,${
+            .15 + pulse
+        })`
+    );
+
+    glow.addColorStop(
+        1,
+        "transparent"
+    );
+
+    bgCtx.fillStyle = glow;
+
+    bgCtx.fillRect(
+        0,
+        0,
+        bgCanvas.width,
+        bgCanvas.height
+    );
+
+    /* grid */
+
+    bgCtx.strokeStyle =
+    "rgba(125,211,252,.08)";
+
+    for(let x=0;x<bgCanvas.width;x+=45){
+
+        bgCtx.beginPath();
+
+        bgCtx.moveTo(x,0);
+
+        bgCtx.lineTo(x,bgCanvas.height);
+
+        bgCtx.stroke();
+    }
+
+    for(let y=0;y<bgCanvas.height;y+=45){
+
+        bgCtx.beginPath();
+
+        bgCtx.moveTo(0,y);
+
+        bgCtx.lineTo(bgCanvas.width,y);
+
+        bgCtx.stroke();
+    }
+
+    /* particles */
+
+    particles.forEach(p=>{
+
+        bgCtx.beginPath();
+
+        bgCtx.arc(
+            p.x,
+            p.y,
+            p.r,
+            0,
+            Math.PI*2
+        );
+
+        bgCtx.fillStyle =
+        `rgba(186,230,253,${p.a})`;
+
+        bgCtx.shadowBlur = 15;
+
+        bgCtx.shadowColor =
+        "rgba(125,211,252,.8)";
+
+        bgCtx.fill();
+
+        bgCtx.shadowBlur = 0;
+
+        p.x += p.sx;
+        p.y += p.sy;
+
+        if(p.x < 0) p.x = bgCanvas.width;
+        if(p.x > bgCanvas.width) p.x = 0;
+
+        if(p.y < 0) p.y = bgCanvas.height;
+        if(p.y > bgCanvas.height) p.y = 0;
+    });
+
+    pulse *= .95;
+}
+
+animateBG();
+
+/* =========================
+   MUSIC REACTIVE
+========================= */
 
 const audio =
 document.getElementById("audio");
 
-const player =
-document.getElementById("player");
-
-const playBtn =
-document.getElementById("playBtn");
-
-const stopBtn =
-document.getElementById("stopBtn");
-
-const progressFill =
-document.getElementById("progressFill");
-
-const progressAudio =
-document.getElementById("progressAudio");
-
-const time =
-document.getElementById("time");
-
-const canvas =
+const visualizer =
 document.getElementById("visualizer");
 
 const ctx =
-canvas.getContext("2d");
-
-const loader =
-document.getElementById("loader");
-
-const volumeSlider =
-document.getElementById("volumeSlider");
-
-/* =========================
-   FILE
-========================= */
-
-dropzone.onclick = () =>
-fileInput.click();
-
-fileInput.onchange = () =>
-handle(fileInput.files[0]);
-
-function handle(file){
-
-    const url =
-    URL.createObjectURL(file);
-
-    audio.src = url;
-
-    audio.load();
-
-    player.style.display = "flex";
-
-    visualize();
-
-    upload(file);
-}
-
-/* =========================
-   PLAY
-========================= */
-
-playBtn.onclick = () => {
-
-    if(!audio.src) return;
-
-    if(audio.paused){
-
-        audio.play();
-
-        playBtn.innerHTML =
-        '<i class="ri-pause-fill"></i>';
-
-    }else{
-
-        audio.pause();
-
-        playBtn.innerHTML =
-        '<i class="ri-play-fill"></i>';
-    }
-};
-
-/* =========================
-   STOP
-========================= */
-
-stopBtn.onclick = () => {
-
-    audio.pause();
-
-    audio.currentTime = 0;
-
-    audio.src = "";
-
-    player.style.display = "none";
-
-    progressFill.style.width = "0%";
-
-    time.innerText = "0:00";
-
-    document.getElementById("result")
-    .innerHTML = "";
-};
-
-/* =========================
-   VOLUME
-========================= */
-
-volumeSlider.oninput = () => {
-
-    audio.volume =
-    volumeSlider.value;
-};
-
-/* =========================
-   PROGRESS
-========================= */
-
-audio.ontimeupdate = () => {
-
-    let percent =
-    (audio.currentTime / audio.duration) * 100;
-
-    progressFill.style.width =
-    percent + "%";
-
-    let min =
-    Math.floor(audio.currentTime / 60);
-
-    let sec =
-    Math.floor(audio.currentTime % 60);
-
-    if(sec < 10){
-        sec = "0" + sec;
-    }
-
-    time.innerText =
-    `${min}:${sec}`;
-};
-
-/* seek */
-
-progressAudio.onclick = e => {
-
-    let width =
-    progressAudio.clientWidth;
-
-    let clickX =
-    e.offsetX;
-
-    audio.currentTime =
-    (clickX / width) * audio.duration;
-};
-
-/* =========================
-   UPLOAD
-========================= */
-
-function upload(file){
-
-    loader.style.display = "block";
-
-    document.getElementById("result")
-    .innerHTML = "";
-
-    const formData =
-    new FormData();
-
-    formData.append("file", file);
-
-    fetch("/analyze", {
-
-        method:"POST",
-
-        body:formData
-    })
-
-    .then(res => res.json())
-
-    .then(data => {
-
-        loader.style.display = "none";
-
-        document.getElementById("result")
-        .innerHTML = `
-
-        <div class="card">
-            BPM: ${data.bpm}
-        </div>
-
-        <div class="card">
-            Key: ${data.key}
-        </div>
-
-        <div class="card">
-            Energy: ${data.energy}
-        </div>
-
-        `;
-    });
-}
-
-/* =========================
-   VISUALIZER
-========================= */
+visualizer.getContext("2d");
 
 function visualize(){
 
@@ -928,397 +1004,63 @@ function visualize(){
 
     analyser.connect(audioCtx.destination);
 
-    analyser.fftSize = 256;
+    analyser.fftSize = 128;
 
-    analyser.smoothingTimeConstant = 0.93;
+    const buffer =
+    new Uint8Array(
+        analyser.frequencyBinCount
+    );
 
-    const bufferLength =
-    analyser.frequencyBinCount;
-
-    const dataArray =
-    new Uint8Array(bufferLength);
-
-    canvas.width = 140;
-
-    canvas.height = 42;
-
-    const stars = [];
-
-    for(let i=0;i<90;i++){
-
-        stars.push({
-
-            x:Math.random()*canvas.width,
-
-            y:Math.random()*canvas.height,
-
-            size:Math.random()*1.8,
-
-            speed:Math.random()*0.15 + 0.03,
-
-            alpha:Math.random()
-        });
-    }
-
-    function drawSpace(){
-
-        const gradient =
-        ctx.createLinearGradient(
-            0,
-            0,
-            canvas.width,
-            canvas.height
-        );
-
-        gradient.addColorStop(0,"#000000");
-
-        gradient.addColorStop(0.5,"#020617");
-
-        gradient.addColorStop(1,"#000814");
-
-        ctx.fillStyle = gradient;
-
-        ctx.fillRect(
-            0,
-            0,
-            canvas.width,
-            canvas.height
-        );
-
-        const nebula =
-        ctx.createRadialGradient(
-            70,
-            20,
-            0,
-            70,
-            20,
-            60
-        );
-
-        nebula.addColorStop(
-            0,
-            "rgba(56,189,248,.12)"
-        );
-
-        nebula.addColorStop(
-            1,
-            "transparent"
-        );
-
-        ctx.fillStyle = nebula;
-
-        ctx.fillRect(
-            0,
-            0,
-            canvas.width,
-            canvas.height
-        );
-
-        stars.forEach(star => {
-
-            ctx.beginPath();
-
-            ctx.arc(
-                star.x,
-                star.y,
-                star.size,
-                0,
-                Math.PI*2
-            );
-
-            ctx.fillStyle =
-            `rgba(255,255,255,${star.alpha})`;
-
-            ctx.fill();
-
-            star.y += star.speed;
-
-            if(star.y > canvas.height){
-
-                star.y = 0;
-
-                star.x =
-                Math.random()*canvas.width;
-            }
-        });
-    }
+    visualizer.width = 140;
+    visualizer.height = 42;
 
     function draw(){
 
         requestAnimationFrame(draw);
 
-        analyser.getByteFrequencyData(dataArray);
+        analyser.getByteFrequencyData(
+            buffer
+        );
 
-        drawSpace();
+        ctx.clearRect(
+            0,
+            0,
+            visualizer.width,
+            visualizer.height
+        );
 
-        let barWidth =
-        canvas.width / bufferLength;
+        let avg = 0;
 
-        for(let i=0;i<bufferLength;i++){
+        for(let i=0;i<buffer.length;i++){
 
-            let value = dataArray[i];
+            avg += buffer[i];
 
-            let percent = value / 255;
+            let h =
+            buffer[i]/6;
 
-            let height =
-            canvas.height * percent;
+            ctx.fillStyle =
+            "rgba(125,211,252,.9)";
 
-            let offset =
-            canvas.height - height;
-
-            ctx.shadowBlur = 14;
-
-            ctx.shadowColor =
-            "rgba(56,189,248,.9)";
-
-            ctx.beginPath();
-
-            ctx.roundRect(
-
-                i * barWidth,
-
-                offset,
-
-                barWidth - 1.8,
-
-                height,
-
-                6
+            ctx.fillRect(
+                i*2,
+                42-h,
+                1.6,
+                h
             );
-
-            const grad =
-            ctx.createLinearGradient(
-                0,
-                offset,
-                0,
-                canvas.height
-            );
-
-            grad.addColorStop(
-                0,
-                "#7dd3fc"
-            );
-
-            grad.addColorStop(
-                1,
-                "#0ea5e9"
-            );
-
-            ctx.fillStyle = grad;
-
-            ctx.fill();
-
-            ctx.shadowBlur = 0;
         }
+
+        avg /= buffer.length;
+
+        /* reactive pulse */
+
+        pulse =
+        avg / 1500;
     }
 
     draw();
 }
 
-/* =========================
-   CYBER BACKGROUND
-========================= */
-
-const bgCanvas =
-document.getElementById("bgCanvas");
-
-const bgCtx =
-bgCanvas.getContext("2d");
-
-function resizeBG(){
-
-    bgCanvas.width =
-    window.innerWidth;
-
-    bgCanvas.height =
-    window.innerHeight;
-}
-
-resizeBG();
-
-window.addEventListener(
-    "resize",
-    resizeBG
-);
-
-/* particles */
-
-const bgParticles = [];
-
-for(let i=0;i<120;i++){
-
-    bgParticles.push({
-
-        x:Math.random()*bgCanvas.width,
-
-        y:Math.random()*bgCanvas.height,
-
-        radius:Math.random()*2 + 0.5,
-
-        speedX:(Math.random()-0.5)*0.2,
-
-        speedY:(Math.random()-0.5)*0.2,
-
-        alpha:Math.random()
-    });
-}
-
-/* grid */
-
-const gridOffset = {
-    x:0,
-    y:0
-};
-
-function drawGrid(){
-
-    const size = 45;
-
-    bgCtx.strokeStyle =
-    "rgba(56,189,248,0.05)";
-
-    bgCtx.lineWidth = 1;
-
-    for(
-        let x = gridOffset.x % size;
-        x < bgCanvas.width;
-        x += size
-    ){
-
-        bgCtx.beginPath();
-
-        bgCtx.moveTo(x,0);
-
-        bgCtx.lineTo(x,bgCanvas.height);
-
-        bgCtx.stroke();
-    }
-
-    for(
-        let y = gridOffset.y % size;
-        y < bgCanvas.height;
-        y += size
-    ){
-
-        bgCtx.beginPath();
-
-        bgCtx.moveTo(0,y);
-
-        bgCtx.lineTo(bgCanvas.width,y);
-
-        bgCtx.stroke();
-    }
-
-    gridOffset.x += 0.08;
-
-    gridOffset.y += 0.03;
-}
-
-/* particles */
-
-function drawParticles(){
-
-    bgParticles.forEach(p => {
-
-        bgCtx.beginPath();
-
-        bgCtx.arc(
-            p.x,
-            p.y,
-            p.radius,
-            0,
-            Math.PI*2
-        );
-
-        bgCtx.fillStyle =
-        `rgba(125,211,252,${p.alpha})`;
-
-        bgCtx.shadowBlur = 15;
-
-        bgCtx.shadowColor =
-        "rgba(56,189,248,.8)";
-
-        bgCtx.fill();
-
-        bgCtx.shadowBlur = 0;
-
-        p.x += p.speedX;
-
-        p.y += p.speedY;
-
-        if(p.x < 0)
-            p.x = bgCanvas.width;
-
-        if(p.x > bgCanvas.width)
-            p.x = 0;
-
-        if(p.y < 0)
-            p.y = bgCanvas.height;
-
-        if(p.y > bgCanvas.height)
-            p.y = 0;
-    });
-}
-
-/* glow */
-
-function drawGlow(){
-
-    const glow =
-    bgCtx.createRadialGradient(
-
-        bgCanvas.width/2,
-        bgCanvas.height/2,
-        0,
-
-        bgCanvas.width/2,
-        bgCanvas.height/2,
-        bgCanvas.width/1.2
-    );
-
-    glow.addColorStop(
-        0,
-        "rgba(56,189,248,.08)"
-    );
-
-    glow.addColorStop(
-        1,
-        "transparent"
-    );
-
-    bgCtx.fillStyle = glow;
-
-    bgCtx.fillRect(
-        0,
-        0,
-        bgCanvas.width,
-        bgCanvas.height
-    );
-}
-
-/* animate */
-
-function animateBG(){
-
-    requestAnimationFrame(
-        animateBG
-    );
-
-    bgCtx.clearRect(
-        0,
-        0,
-        bgCanvas.width,
-        bgCanvas.height
-    );
-
-    drawGlow();
-
-    drawGrid();
-
-    drawParticles();
-}
-
-animateBG();
+visualize();
 
 </script>
 
