@@ -42,33 +42,51 @@ body{
 /* neon rings */
 
 .ring{
+
     position:fixed;
+
     border-radius:50%;
+
     pointer-events:none;
+
     filter:blur(1px);
+
     opacity:.22;
-    animation:rotateRing linear infinite;
+
+    animation:
+    rotateRing linear infinite;
 }
 
 .ring1{
+
     width:600px;
     height:600px;
-    border:1px solid rgba(125,211,252,.16);
+
+    border:
+    1px solid rgba(125,211,252,.16);
+
     top:-200px;
     left:-200px;
+
     animation-duration:40s;
 }
 
 .ring2{
+
     width:900px;
     height:900px;
-    border:1px solid rgba(56,189,248,.08);
+
+    border:
+    1px solid rgba(56,189,248,.08);
+
     bottom:-300px;
     right:-300px;
+
     animation-duration:65s;
 }
 
 @keyframes rotateRing{
+
     from{
         transform:rotate(0deg);
     }
@@ -104,6 +122,9 @@ body{
     z-index:-1;
 
     filter:blur(20px);
+
+    transition:
+    transform .08s linear;
 }
 
 /* =========================
@@ -131,17 +152,12 @@ body{
     box-shadow:
     0 20px 60px rgba(0,0,0,0.35);
 
-    overflow:visible;
+    overflow:hidden;
 
     transform-style:preserve-3d;
 
-    will-change:transform;
-
-    transition:
-    transform .25s ease-out,
-    box-shadow .35s ease;
-
-    animation:intro 1.5s ease;
+    animation:
+    intro 1.5s ease;
 }
 
 /* intro */
@@ -149,6 +165,7 @@ body{
 @keyframes intro{
 
     from{
+
         opacity:0;
 
         transform:
@@ -157,6 +174,7 @@ body{
     }
 
     to{
+
         opacity:1;
 
         transform:
@@ -204,15 +222,21 @@ body{
 ========================= */
 
 .header{
+
     display:flex;
+
     justify-content:center;
+
     align-items:center;
+
     gap:15px;
 }
 
 .logo{
+
     width:70px;
     height:70px;
+
     border-radius:50%;
 
     box-shadow:
@@ -236,10 +260,6 @@ body{
     cursor:pointer;
 
     transition:.35s;
-
-    position:relative;
-
-    z-index:50;
 }
 
 .dropzone:hover{
@@ -285,8 +305,6 @@ body{
     overflow:hidden;
 
     transition:.4s;
-
-    isolation:isolate;
 }
 
 .glass-player:hover{
@@ -306,8 +324,6 @@ body{
     position:absolute;
 
     inset:-40%;
-
-    z-index:0;
 
     background:
 
@@ -422,7 +438,7 @@ body{
 
 /* fft */
 
-#visualizer{
+canvas{
 
     width:140px;
     height:42px;
@@ -486,16 +502,22 @@ body{
 /* time */
 
 #time{
+
     font-size:12px;
+
     z-index:2;
 }
 
 /* volume */
 
 .volume-box{
+
     display:flex;
+
     align-items:center;
+
     gap:8px;
+
     z-index:2;
 }
 
@@ -569,7 +591,9 @@ body{
 /* loader */
 
 .loader{
+
     margin-top:30px;
+
     display:none;
 }
 
@@ -642,12 +666,16 @@ footer{
 
 <body>
 
+<!-- BACKGROUND -->
+
 <canvas id="bgCanvas"></canvas>
 
 <div class="ring ring1"></div>
 <div class="ring ring2"></div>
 
 <div class="cursor-glow" id="cursorGlow"></div>
+
+<!-- APP -->
 
 <div class="container" id="container">
 
@@ -671,6 +699,63 @@ footer{
 
     <input type="file" id="fileInput" hidden>
 
+    <div class="glass-player" id="player">
+
+        <div class="ambient-wave"></div>
+
+        <button id="playBtn">
+            <i class="ri-play-fill"></i>
+        </button>
+
+        <canvas id="visualizer"></canvas>
+
+        <div class="progress-audio" id="progressAudio">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+
+        <span id="time">0:00</span>
+
+        <div class="volume-box">
+
+            <i class="ri-volume-up-line"></i>
+
+            <input
+            type="range"
+            id="volumeSlider"
+            min="0"
+            max="1"
+            step="0.01"
+            value="1"
+            >
+
+        </div>
+
+        <button id="stopBtn">
+            <i class="ri-close-line"></i>
+        </button>
+
+        <audio id="audio"></audio>
+
+    </div>
+
+    <div class="loader" id="loader">
+
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+
+    </div>
+
+    <div class="cards" id="result"></div>
+
+    <a
+    href="https://t.me/OpsyMindBot"
+    target="_blank"
+    class="tg-btn"
+    >
+        Открыть бота
+    </a>
+
 </div>
 
 <footer>
@@ -680,41 +765,14 @@ footer{
 <script>
 
 /* =========================
-   FILE UPLOAD
+   ELEMENTS
 ========================= */
 
-const dropzone =
-document.getElementById("dropzone");
+const container =
+document.getElementById("container");
 
-const fileInput =
-document.getElementById("fileInput");
-
-dropzone.addEventListener(
-    "click",
-    () => {
-        fileInput.click();
-    }
-);
-
-dropzone.addEventListener(
-    "mouseenter",
-    () => {
-        dropzone.style.transform =
-        "translateY(-2px) scale(1.01)";
-    }
-);
-
-dropzone.addEventListener(
-    "mouseleave",
-    () => {
-        dropzone.style.transform =
-        "translateY(0px) scale(1)";
-    }
-);
-
-/* =========================
-   BACKGROUND
-========================= */
+const cursorGlow =
+document.getElementById("cursorGlow");
 
 const bgCanvas =
 document.getElementById("bgCanvas");
@@ -722,13 +780,55 @@ document.getElementById("bgCanvas");
 const bgCtx =
 bgCanvas.getContext("2d");
 
+/* =========================
+   PARALLAX + CURSOR GLOW
+========================= */
+
+document.addEventListener(
+    "mousemove",
+    e => {
+
+        cursorGlow.style.left =
+        e.clientX + "px";
+
+        cursorGlow.style.top =
+        e.clientY + "px";
+
+        let x =
+        (window.innerWidth/2 - e.clientX)/40;
+
+        let y =
+        (window.innerHeight/2 - e.clientY)/40;
+
+        container.style.transform =
+
+        `
+        rotateY(${-x}deg)
+        rotateX(${y}deg)
+        `;
+    }
+);
+
+document.addEventListener(
+    "mouseleave",
+    () => {
+
+        container.style.transform =
+        "rotateY(0deg) rotateX(0deg)";
+    }
+);
+
+/* =========================
+   CYBER BACKGROUND
+========================= */
+
 function resizeBG(){
 
     bgCanvas.width =
-    window.innerWidth;
+    innerWidth;
 
     bgCanvas.height =
-    window.innerHeight;
+    innerHeight;
 }
 
 resizeBG();
@@ -758,6 +858,8 @@ for(let i=0;i<140;i++){
     });
 }
 
+let pulse = 0;
+
 function animateBG(){
 
     requestAnimationFrame(
@@ -770,6 +872,43 @@ function animateBG(){
         bgCanvas.width,
         bgCanvas.height
     );
+
+    /* glow */
+
+    const glow =
+    bgCtx.createRadialGradient(
+
+        bgCanvas.width/2,
+        bgCanvas.height/2,
+        0,
+
+        bgCanvas.width/2,
+        bgCanvas.height/2,
+        bgCanvas.width/1.2
+    );
+
+    glow.addColorStop(
+        0,
+        `rgba(125,211,252,${
+            .15 + pulse
+        })`
+    );
+
+    glow.addColorStop(
+        1,
+        "transparent"
+    );
+
+    bgCtx.fillStyle = glow;
+
+    bgCtx.fillRect(
+        0,
+        0,
+        bgCanvas.width,
+        bgCanvas.height
+    );
+
+    /* grid */
 
     bgCtx.strokeStyle =
     "rgba(125,211,252,.08)";
@@ -795,6 +934,8 @@ function animateBG(){
 
         bgCtx.stroke();
     }
+
+    /* particles */
 
     particles.forEach(p=>{
 
@@ -829,75 +970,97 @@ function animateBG(){
         if(p.y < 0) p.y = bgCanvas.height;
         if(p.y > bgCanvas.height) p.y = 0;
     });
+
+    pulse *= .95;
 }
 
 animateBG();
 
 /* =========================
-   PARALLAX
+   MUSIC REACTIVE
 ========================= */
 
-const container =
-document.getElementById("container");
+const audio =
+document.getElementById("audio");
 
-const cursorGlow =
-document.getElementById("cursorGlow");
+const visualizer =
+document.getElementById("visualizer");
 
-let targetX = 0;
-let targetY = 0;
+const ctx =
+visualizer.getContext("2d");
 
-let currentX = 0;
-let currentY = 0;
+function visualize(){
 
-document.addEventListener(
-    "mousemove",
-    e => {
+    const audioCtx =
+    new AudioContext();
 
-        cursorGlow.style.left =
-        e.clientX + "px";
+    const src =
+    audioCtx.createMediaElementSource(audio);
 
-        cursorGlow.style.top =
-        e.clientY + "px";
+    const analyser =
+    audioCtx.createAnalyser();
 
-        targetX =
-        (window.innerWidth / 2 - e.clientX) / 22;
+    src.connect(analyser);
 
-        targetY =
-        (window.innerHeight / 2 - e.clientY) / 22;
-    }
-);
+    analyser.connect(audioCtx.destination);
 
-function animateContainer(){
+    analyser.fftSize = 128;
 
-    requestAnimationFrame(
-        animateContainer
+    const buffer =
+    new Uint8Array(
+        analyser.frequencyBinCount
     );
 
-    currentX +=
-    (targetX - currentX) * 0.06;
+    visualizer.width = 140;
+    visualizer.height = 42;
 
-    currentY +=
-    (targetY - currentY) * 0.06;
+    function draw(){
 
-    container.style.transform =
+        requestAnimationFrame(draw);
 
-    `
-    perspective(1800px)
-    rotateY(${-currentX}deg)
-    rotateX(${currentY}deg)
-    `;
+        analyser.getByteFrequencyData(
+            buffer
+        );
+
+        ctx.clearRect(
+            0,
+            0,
+            visualizer.width,
+            visualizer.height
+        );
+
+        let avg = 0;
+
+        for(let i=0;i<buffer.length;i++){
+
+            avg += buffer[i];
+
+            let h =
+            buffer[i]/6;
+
+            ctx.fillStyle =
+            "rgba(125,211,252,.9)";
+
+            ctx.fillRect(
+                i*2,
+                42-h,
+                1.6,
+                h
+            );
+        }
+
+        avg /= buffer.length;
+
+        /* reactive pulse */
+
+        pulse =
+        avg / 1500;
+    }
+
+    draw();
 }
 
-animateContainer();
-
-document.addEventListener(
-    "mouseleave",
-    () => {
-
-        targetX = 0;
-        targetY = 0;
-    }
-);
+visualize();
 
 </script>
 
