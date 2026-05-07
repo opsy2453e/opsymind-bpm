@@ -1,7 +1,136 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>OpsyMind BPM</title>
+
+<link
+href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css"
+rel="stylesheet"
+/>
+
 <style>
 
 /* =========================================
-SAFE CINEMATIC EXTENSION
+BASE
+========================================= */
+
+*{
+    box-sizing:border-box;
+}
+
+body{
+
+    margin:0;
+
+    font-family:'Segoe UI',sans-serif;
+
+    color:#f8fafc;
+
+    text-align:center;
+
+    overflow-x:hidden;
+
+    background:
+
+    radial-gradient(
+        circle at top,
+        #071426,
+        #020617 55%,
+        #000814
+    );
+
+    perspective:1200px;
+}
+
+/* =========================================
+BACKGROUND
+========================================= */
+
+#bgCanvas{
+
+    position:fixed;
+
+    inset:0;
+
+    width:100%;
+
+    height:100%;
+
+    z-index:-2;
+}
+
+/* =========================================
+AURORA
+========================================= */
+
+#aurora{
+
+    position:fixed;
+
+    inset:0;
+
+    z-index:-4;
+
+    pointer-events:none;
+
+    filter:blur(70px);
+
+    opacity:.9;
+
+    background:
+
+    radial-gradient(
+        circle at 20% 30%,
+        rgba(56,189,248,.18),
+        transparent 35%
+    ),
+
+    radial-gradient(
+        circle at 80% 20%,
+        rgba(14,165,233,.14),
+        transparent 40%
+    ),
+
+    radial-gradient(
+        circle at 50% 80%,
+        rgba(125,211,252,.12),
+        transparent 45%
+    );
+
+    animation:
+    auroraMove 18s ease-in-out infinite alternate;
+}
+
+@keyframes auroraMove{
+
+    0%{
+
+        transform:
+        scale(1)
+        rotate(0deg);
+    }
+
+    50%{
+
+        transform:
+        scale(1.08)
+        rotate(5deg);
+    }
+
+    100%{
+
+        transform:
+        scale(1.03)
+        rotate(-5deg);
+    }
+}
+
+/* =========================================
+SPACE FOG
 ========================================= */
 
 #spaceFog{
@@ -51,34 +180,9 @@ SAFE CINEMATIC EXTENSION
     }
 }
 
-/* holographic */
-
-.container::after{
-
-    content:"";
-
-    position:absolute;
-
-    inset:0;
-
-    border-radius:25px;
-
-    pointer-events:none;
-
-    background:
-
-    linear-gradient(
-        135deg,
-        rgba(255,255,255,.05),
-        transparent 30%,
-        rgba(56,189,248,.05),
-        transparent 70%
-    );
-
-    mix-blend-mode:screen;
-}
-
-/* liquid */
+/* =========================================
+LIQUID BLOBS
+========================================= */
 
 .liquidBlob{
 
@@ -105,21 +209,345 @@ SAFE CINEMATIC EXTENSION
 @keyframes blobMove{
 
     0%{
+
         transform:
         translate(0,0)
         scale(1);
     }
 
     100%{
+
         transform:
         translate(60px,-40px)
         scale(1.2);
     }
 }
 
-/* cards */
+/* =========================================
+CONTAINER
+========================================= */
+
+.container{
+
+    position:relative;
+
+    margin:80px auto;
+
+    padding:40px;
+
+    max-width:720px;
+
+    background:rgba(255,255,255,0.08);
+
+    border-radius:25px;
+
+    backdrop-filter:blur(25px);
+
+    border:1px solid rgba(255,255,255,0.16);
+
+    box-shadow:
+
+    0 25px 80px rgba(56,189,248,.15),
+
+    0 0 120px rgba(14,165,233,.08);
+
+    overflow:hidden;
+
+    animation:
+    pageEnter 1.5s ease;
+}
+
+/* holographic glass */
+
+.container::after{
+
+    content:"";
+
+    position:absolute;
+
+    inset:0;
+
+    border-radius:25px;
+
+    pointer-events:none;
+
+    background:
+
+    linear-gradient(
+        135deg,
+        rgba(255,255,255,.05),
+        transparent 30%,
+        rgba(56,189,248,.05),
+        transparent 70%
+    );
+
+    mix-blend-mode:screen;
+}
+
+@keyframes pageEnter{
+
+    from{
+
+        opacity:0;
+
+        transform:
+        scale(1.03)
+        translateY(20px);
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:
+        scale(1)
+        translateY(0);
+    }
+}
+
+/* =========================================
+HEADER
+========================================= */
+
+.header{
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    gap:15px;
+}
+
+.logo{
+
+    width:70px;
+
+    height:70px;
+
+    border-radius:50%;
+}
+
+/* =========================================
+DROPZONE
+========================================= */
+
+.dropzone{
+
+    margin-top:30px;
+
+    border:2px dashed rgba(56,189,248,0.7);
+
+    padding:40px;
+
+    border-radius:15px;
+
+    cursor:pointer;
+
+    transition:.35s;
+}
+
+.dropzone:hover{
+
+    border-color:#38bdf8;
+
+    background:rgba(56,189,248,.08);
+}
+
+/* =========================================
+PLAYER
+========================================= */
+
+.glass-player{
+
+    margin-top:20px;
+
+    padding:15px;
+
+    border-radius:18px;
+
+    background:rgba(255,255,255,.10);
+
+    backdrop-filter:blur(20px);
+
+    display:none;
+
+    align-items:center;
+
+    gap:12px;
+
+    border:1px solid rgba(255,255,255,0.12);
+
+    position:relative;
+
+    overflow:hidden;
+}
+
+/* =========================================
+BUTTONS
+========================================= */
+
+#playBtn{
+
+    background:
+
+    linear-gradient(
+        135deg,
+        #38bdf8,
+        #0ea5e9
+    );
+
+    border:none;
+
+    color:white;
+
+    font-size:18px;
+
+    border-radius:50%;
+
+    width:42px;
+
+    height:42px;
+
+    cursor:pointer;
+}
+
+#stopBtn{
+
+    background:rgba(255,255,255,0.1);
+
+    border:none;
+
+    color:white;
+
+    border-radius:50%;
+
+    width:35px;
+
+    height:35px;
+
+    cursor:pointer;
+}
+
+/* =========================================
+VISUALIZER
+========================================= */
+
+canvas{
+
+    width:140px;
+
+    height:42px;
+
+    border-radius:12px;
+
+    display:block;
+
+    background:
+
+    radial-gradient(
+        circle at center,
+        #020617,
+        #000
+    );
+}
+
+/* =========================================
+PROGRESS
+========================================= */
+
+.progress-audio{
+
+    flex:1;
+
+    height:6px;
+
+    background:rgba(255,255,255,0.1);
+
+    border-radius:10px;
+
+    overflow:hidden;
+
+    cursor:pointer;
+
+    position:relative;
+}
+
+.progress-fill{
+
+    height:100%;
+
+    width:0;
+
+    background:
+
+    linear-gradient(
+        90deg,
+        #38bdf8,
+        #0ea5e9
+    );
+}
+
+/* waveform */
+
+#waveCanvas{
+
+    position:absolute;
+
+    inset:0;
+
+    width:100%;
+
+    height:100%;
+
+    opacity:.35;
+
+    pointer-events:none;
+}
+
+/* =========================================
+VOLUME
+========================================= */
+
+.volume-box{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+}
+
+#volumeSlider{
+
+    width:90px;
+}
+
+/* =========================================
+CARDS
+========================================= */
+
+.cards{
+
+    margin-top:30px;
+
+    display:flex;
+
+    justify-content:space-around;
+
+    flex-wrap:wrap;
+}
 
 .card{
+
+    background:rgba(255,255,255,0.07);
+
+    padding:20px;
+
+    margin:10px;
+
+    border-radius:15px;
 
     transition:
     transform .35s ease,
@@ -140,24 +568,73 @@ SAFE CINEMATIC EXTENSION
     0 20px 40px rgba(56,189,248,.2);
 }
 
-/* waveform */
+/* =========================================
+LOADER
+========================================= */
 
-#waveCanvas{
+.loader{
 
-    position:absolute;
+    margin-top:30px;
 
-    inset:0;
-
-    width:100%;
-
-    height:100%;
-
-    opacity:.35;
-
-    pointer-events:none;
+    display:none;
 }
 
-/* stars */
+.bar{
+
+    width:6px;
+
+    height:40px;
+
+    background:#38bdf8;
+
+    margin:0 3px;
+
+    display:inline-block;
+
+    animation:bounce 1s infinite;
+}
+
+@keyframes bounce{
+
+    0%,100%{
+        transform:scaleY(0.3);
+    }
+
+    50%{
+        transform:scaleY(1);
+    }
+}
+
+/* =========================================
+TG BUTTON
+========================================= */
+
+.tg-btn{
+
+    margin-top:30px;
+
+    display:inline-block;
+
+    padding:12px 25px;
+
+    border-radius:12px;
+
+    background:
+
+    linear-gradient(
+        135deg,
+        #38bdf8,
+        #0ea5e9
+    );
+
+    color:white;
+
+    text-decoration:none;
+}
+
+/* =========================================
+STARS
+========================================= */
 
 .reactive-star{
 
@@ -182,76 +659,547 @@ SAFE CINEMATIC EXTENSION
 }
 
 </style>
+</head>
+
+<body>
+
+<div id="aurora"></div>
+<div id="spaceFog"></div>
+
+<canvas id="bgCanvas"></canvas>
+
+<div class="container">
+
+    <div class="header">
+
+        <img
+        src="/static/avatar.png"
+        class="logo"
+        >
+
+        <h1>
+            <i class="ri-headphone-fill"></i>
+            OpsyMind BPM
+        </h1>
+
+    </div>
+
+    <div class="dropzone" id="dropzone">
+        📤 Перетащи MP3 или нажми
+    </div>
+
+    <input type="file" id="fileInput" hidden>
+
+    <div class="glass-player" id="player">
+
+        <button id="playBtn">
+            <i class="ri-play-fill"></i>
+        </button>
+
+        <canvas id="visualizer"></canvas>
+
+        <div class="progress-audio" id="progressAudio">
+
+            <canvas id="waveCanvas"></canvas>
+
+            <div class="progress-fill" id="progressFill"></div>
+
+        </div>
+
+        <span id="time">0:00</span>
+
+        <div class="volume-box">
+
+            <i class="ri-volume-up-line"></i>
+
+            <input
+            type="range"
+            id="volumeSlider"
+            min="0"
+            max="1"
+            step="0.01"
+            value="1"
+            >
+
+        </div>
+
+        <button id="stopBtn">
+            <i class="ri-close-line"></i>
+        </button>
+
+        <audio id="audio"></audio>
+
+    </div>
+
+    <div class="loader" id="loader">
+
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+
+    </div>
+
+    <div class="cards" id="result"></div>
+
+    <a
+    href="https://t.me/OpsyMindBot"
+    target="_blank"
+    class="tg-btn"
+    >
+        Открыть бота
+    </a>
+
+</div>
 
 <script>
 
 /* =========================================
-SAFE EXTENSIONS
+ELEMENTS
 ========================================= */
 
-/* fog */
+const dropzone =
+document.getElementById("dropzone");
 
-const fog =
-document.createElement("div");
+const fileInput =
+document.getElementById("fileInput");
 
-fog.id = "spaceFog";
+const audio =
+document.getElementById("audio");
 
-document.body.appendChild(fog);
+const player =
+document.getElementById("player");
 
-/* liquid blobs */
+const playBtn =
+document.getElementById("playBtn");
 
-for(let i=0;i<2;i++){
+const stopBtn =
+document.getElementById("stopBtn");
 
-    const blob =
-    document.createElement("div");
+const progressFill =
+document.getElementById("progressFill");
 
-    blob.className =
-    "liquidBlob";
+const progressAudio =
+document.getElementById("progressAudio");
 
-    blob.style.background =
-    i === 0
-    ? "#38bdf8"
-    : "#0ea5e9";
+const time =
+document.getElementById("time");
 
-    blob.style.left =
-    (i * 60) + "vw";
+const canvas =
+document.getElementById("visualizer");
 
-    blob.style.top =
-    (i * 30) + "vh";
+const ctx =
+canvas.getContext("2d");
 
-    document.body.appendChild(blob);
+const loader =
+document.getElementById("loader");
+
+const volumeSlider =
+document.getElementById("volumeSlider");
+
+const waveCanvas =
+document.getElementById("waveCanvas");
+
+const wctx =
+waveCanvas.getContext("2d");
+
+/* =========================================
+AUDIO REACTIVE
+========================================= */
+
+let reactiveAnalyser = null;
+let reactiveData = null;
+
+/* =========================================
+FILE
+========================================= */
+
+dropzone.onclick = () =>
+fileInput.click();
+
+fileInput.onchange = () =>
+handle(fileInput.files[0]);
+
+function handle(file){
+
+    const url =
+    URL.createObjectURL(file);
+
+    audio.src = url;
+
+    audio.load();
+
+    player.style.display = "flex";
+
+    visualize();
+
+    upload(file);
 }
 
 /* =========================================
-CAMERA MOTION
+PLAY
 ========================================= */
 
-document.addEventListener(
-    "mousemove",
-    e => {
+playBtn.onclick = () => {
 
-        const x =
-        (e.clientX / innerWidth - .5);
+    if(!audio.src) return;
 
-        const y =
-        (e.clientY / innerHeight - .5);
+    if(audio.paused){
 
-        const container =
-        document.querySelector(
-        ".container"
+        audio.play();
+
+        playBtn.innerHTML =
+        '<i class="ri-pause-fill"></i>';
+
+    }else{
+
+        audio.pause();
+
+        playBtn.innerHTML =
+        '<i class="ri-play-fill"></i>';
+    }
+};
+
+/* =========================================
+STOP
+========================================= */
+
+stopBtn.onclick = () => {
+
+    audio.pause();
+
+    audio.currentTime = 0;
+
+    audio.src = "";
+
+    player.style.display = "none";
+};
+
+/* =========================================
+VOLUME
+========================================= */
+
+volumeSlider.oninput = () => {
+
+    audio.volume =
+    volumeSlider.value;
+};
+
+/* =========================================
+PROGRESS
+========================================= */
+
+audio.ontimeupdate = () => {
+
+    const percent =
+    (audio.currentTime / audio.duration)
+    * 100;
+
+    progressFill.style.width =
+    percent + "%";
+
+    let min =
+    Math.floor(audio.currentTime / 60);
+
+    let sec =
+    Math.floor(audio.currentTime % 60);
+
+    if(sec < 10)
+        sec = "0" + sec;
+
+    time.innerText =
+    `${min}:${sec}`;
+};
+
+progressAudio.onclick = e => {
+
+    const width =
+    progressAudio.clientWidth;
+
+    audio.currentTime =
+
+    (e.offsetX / width)
+    * audio.duration;
+};
+
+/* =========================================
+UPLOAD
+========================================= */
+
+function upload(file){
+
+    loader.style.display = "block";
+
+    const formData =
+    new FormData();
+
+    formData.append("file", file);
+
+    fetch("/analyze", {
+
+        method:"POST",
+
+        body:formData
+    })
+
+    .then(res => res.json())
+
+    .then(data => {
+
+        loader.style.display =
+        "none";
+
+        document.getElementById(
+        "result"
+        ).innerHTML = `
+
+        <div class="card">
+            BPM: ${data.bpm}
+        </div>
+
+        <div class="card">
+            Key: ${data.key}
+        </div>
+
+        <div class="card">
+            Energy: ${data.energy}
+        </div>
+        `;
+    });
+}
+
+/* =========================================
+VISUALIZER
+========================================= */
+
+function visualize(){
+
+    const audioCtx =
+    new AudioContext();
+
+    const src =
+    audioCtx
+    .createMediaElementSource(audio);
+
+    const analyser =
+    audioCtx.createAnalyser();
+
+    reactiveAnalyser =
+    analyser;
+
+    src.connect(analyser);
+
+    analyser.connect(
+    audioCtx.destination
+    );
+
+    analyser.fftSize = 256;
+
+    reactiveData =
+    new Uint8Array(
+        analyser.frequencyBinCount
+    );
+
+    canvas.width = 140;
+    canvas.height = 42;
+
+    function draw(){
+
+        requestAnimationFrame(draw);
+
+        analyser.getByteFrequencyData(
+        reactiveData
         );
 
-        container.style.transform = `
+        ctx.clearRect(
+            0,
+            0,
+            canvas.width,
+            canvas.height
+        );
 
-            perspective(1200px)
+        const barWidth =
+        canvas.width /
+        reactiveData.length;
 
-            rotateY(${x * 6}deg)
+        for(
+            let i=0;
+            i<reactiveData.length;
+            i++
+        ){
 
-            rotateX(${-y * 6}deg)
+            const value =
+            reactiveData[i];
 
-        `;
+            const height =
+            (value / 255)
+            * canvas.height;
+
+            ctx.fillStyle =
+            "#38bdf8";
+
+            ctx.fillRect(
+
+                i * barWidth,
+
+                canvas.height - height,
+
+                barWidth - 1,
+
+                height
+            );
+        }
+
+        drawWaveform();
+        reactiveEffects();
     }
+
+    draw();
+}
+
+/* =========================================
+WAVEFORM
+========================================= */
+
+function drawWaveform(){
+
+    waveCanvas.width =
+    waveCanvas.offsetWidth;
+
+    waveCanvas.height =
+    waveCanvas.offsetHeight;
+
+    wctx.clearRect(
+        0,
+        0,
+        waveCanvas.width,
+        waveCanvas.height
+    );
+
+    if(!reactiveData) return;
+
+    wctx.beginPath();
+
+    for(
+        let i=0;
+        i<reactiveData.length;
+        i++
+    ){
+
+        const x =
+        (i / reactiveData.length)
+        * waveCanvas.width;
+
+        const y =
+        waveCanvas.height / 2 +
+
+        (
+            reactiveData[i] / 255
+        ) * 10 - 5;
+
+        if(i === 0){
+
+            wctx.moveTo(x,y);
+
+        }else{
+
+            wctx.lineTo(x,y);
+        }
+    }
+
+    wctx.strokeStyle =
+    "rgba(125,211,252,.9)";
+
+    wctx.lineWidth = 1.2;
+
+    wctx.stroke();
+}
+
+/* =========================================
+BACKGROUND
+========================================= */
+
+const bgCanvas =
+document.getElementById("bgCanvas");
+
+const bgCtx =
+bgCanvas.getContext("2d");
+
+function resizeBG(){
+
+    bgCanvas.width =
+    innerWidth;
+
+    bgCanvas.height =
+    innerHeight;
+}
+
+resizeBG();
+
+window.addEventListener(
+    "resize",
+    resizeBG
 );
+
+const particles = [];
+
+for(let i=0;i<120;i++){
+
+    particles.push({
+
+        x:Math.random()*innerWidth,
+
+        y:Math.random()*innerHeight,
+
+        r:Math.random()*2,
+
+        dx:(Math.random()-.5)*0.3,
+
+        dy:(Math.random()-.5)*0.3
+    });
+}
+
+function animateBG(){
+
+    requestAnimationFrame(
+        animateBG
+    );
+
+    bgCtx.clearRect(
+        0,
+        0,
+        innerWidth,
+        innerHeight
+    );
+
+    particles.forEach(p => {
+
+        bgCtx.beginPath();
+
+        bgCtx.arc(
+            p.x,
+            p.y,
+            p.r,
+            0,
+            Math.PI*2
+        );
+
+        bgCtx.fillStyle =
+        "rgba(125,211,252,.8)";
+
+        bgCtx.fill();
+
+        p.x += p.dx;
+        p.y += p.dy;
+
+        if(p.x < 0) p.x = innerWidth;
+        if(p.x > innerWidth) p.x = 0;
+
+        if(p.y < 0) p.y = innerHeight;
+        if(p.y > innerHeight) p.y = 0;
+    });
+}
+
+animateBG();
 
 /* =========================================
 REACTIVE STARS
@@ -273,71 +1221,18 @@ for(let i=0;i<80;i++){
     star.style.top =
     Math.random()*100 + "vh";
 
-    star.style.opacity =
-    Math.random();
-
     document.body.appendChild(star);
 
     stars.push(star);
 }
 
 /* =========================================
-WAVEFORM
+REACTIVE FX
 ========================================= */
 
-const wave =
-document.createElement("canvas");
+function reactiveEffects(){
 
-wave.id = "waveCanvas";
-
-document.querySelector(
-".progress-audio"
-).appendChild(wave);
-
-const wctx =
-wave.getContext("2d");
-
-function resizeWave(){
-
-    wave.width =
-    wave.offsetWidth;
-
-    wave.height =
-    wave.offsetHeight;
-}
-
-resizeWave();
-
-window.addEventListener(
-    "resize",
-    resizeWave
-);
-
-/* =========================================
-SAFE AUDIO REACTIVE
-========================================= */
-
-function safeReactive(){
-
-    requestAnimationFrame(
-        safeReactive
-    );
-
-    if(
-        typeof reactiveAnalyser ===
-        "undefined"
-    ) return;
-
-    if(!reactiveAnalyser)
-    return;
-
-    if(!reactiveData)
-    return;
-
-    reactiveAnalyser
-    .getByteFrequencyData(
-        reactiveData
-    );
+    if(!reactiveData) return;
 
     let bass = 0;
     let highs = 0;
@@ -361,28 +1256,18 @@ function safeReactive(){
     const highPower =
     highs / 255;
 
-    /* aurora */
-
     const aurora =
     document.getElementById(
     "aurora"
     );
 
-    if(aurora){
+    aurora.style.filter = `
 
-        aurora.style.filter = `
+        blur(${70 + bassPower * 40}px)
 
-            blur(${70 + bassPower * 40}px)
+        brightness(${1 + bassPower * .4})
 
-            brightness(${1 + bassPower * .4})
-
-        `;
-
-        aurora.style.opacity =
-        0.8 + bassPower * .4;
-    }
-
-    /* stars */
+    `;
 
     stars.forEach(star => {
 
@@ -395,61 +1280,14 @@ function safeReactive(){
         `;
 
         star.style.opacity =
-        0.3 + highPower;
+        .3 + highPower;
     });
-
-    /* waveform */
-
-    wctx.clearRect(
-        0,
-        0,
-        wave.width,
-        wave.height
-    );
-
-    wctx.beginPath();
-
-    for(
-        let i=0;
-        i<reactiveData.length;
-        i++
-    ){
-
-        const x =
-        (i / reactiveData.length)
-        * wave.width;
-
-        const y =
-        wave.height / 2 +
-
-        (
-            reactiveData[i] / 255
-        ) * 10 - 5;
-
-        if(i === 0){
-
-            wctx.moveTo(x,y);
-
-        }else{
-
-            wctx.lineTo(x,y);
-        }
-    }
-
-    wctx.strokeStyle =
-    "rgba(125,211,252,.9)";
-
-    wctx.lineWidth = 1.2;
-
-    wctx.stroke();
-
-    /* glow */
 
     document.querySelector(
     ".container"
     ).style.boxShadow = `
 
-        0 20px 80px rgba(
+        0 25px 80px rgba(
             56,189,248,
             ${0.15 + bassPower * .5}
         ),
@@ -462,6 +1300,61 @@ function safeReactive(){
     `;
 }
 
-safeReactive();
+/* =========================================
+CAMERA MOTION
+========================================= */
+
+document.addEventListener(
+    "mousemove",
+    e => {
+
+        const x =
+        (e.clientX / innerWidth - .5);
+
+        const y =
+        (e.clientY / innerHeight - .5);
+
+        document.querySelector(
+        ".container"
+        ).style.transform = `
+
+            perspective(1200px)
+
+            rotateY(${x * 6}deg)
+
+            rotateX(${-y * 6}deg)
+
+        `;
+    }
+);
+
+/* =========================================
+LIQUID BLOBS
+========================================= */
+
+for(let i=0;i<2;i++){
+
+    const blob =
+    document.createElement("div");
+
+    blob.className =
+    "liquidBlob";
+
+    blob.style.background =
+    i === 0
+    ? "#38bdf8"
+    : "#0ea5e9";
+
+    blob.style.left =
+    (i * 60) + "vw";
+
+    blob.style.top =
+    (i * 30) + "vh";
+
+    document.body.appendChild(blob);
+}
 
 </script>
+
+</body>
+</html>
