@@ -12,124 +12,36 @@ rel="stylesheet"
 
 <style>
 
-*{
-    box-sizing:border-box;
-}
-
 body{
     margin:0;
     font-family:'Segoe UI',sans-serif;
     color:white;
     text-align:center;
-    overflow:hidden;
+    overflow-x:hidden;
 
     background:
     radial-gradient(circle at top,#0f172a 0%,#111827 35%,#1e293b 100%);
 }
 
-/* =========================
-   BACKGROUND
-========================= */
+/* cyber background */
 
 #bgCanvas{
     position:fixed;
     inset:0;
     width:100%;
     height:100%;
-    z-index:-5;
-}
-
-/* neon rings */
-
-.ring{
-
-    position:fixed;
-
-    border-radius:50%;
-
-    pointer-events:none;
-
-    filter:blur(1px);
-
-    opacity:.22;
-
-    animation:
-    rotateRing linear infinite;
-}
-
-.ring1{
-
-    width:600px;
-    height:600px;
-
-    border:
-    1px solid rgba(125,211,252,.16);
-
-    top:-200px;
-    left:-200px;
-
-    animation-duration:40s;
-}
-
-.ring2{
-
-    width:900px;
-    height:900px;
-
-    border:
-    1px solid rgba(56,189,248,.08);
-
-    bottom:-300px;
-    right:-300px;
-
-    animation-duration:65s;
-}
-
-@keyframes rotateRing{
-
-    from{
-        transform:rotate(0deg);
-    }
-
-    to{
-        transform:rotate(360deg);
-    }
-}
-
-/* cursor glow */
-
-.cursor-glow{
-
-    position:fixed;
-
-    width:280px;
-    height:280px;
-
-    border-radius:50%;
-
-    pointer-events:none;
+    z-index:-2;
 
     background:
-    radial-gradient(
-        circle,
-        rgba(125,211,252,.16),
-        transparent 70%
+    linear-gradient(
+        180deg,
+        #0f172a,
+        #111827,
+        #1e293b
     );
-
-    transform:
-    translate(-50%,-50%);
-
-    z-index:-1;
-
-    filter:blur(20px);
-
-    transition:
-    transform .08s linear;
 }
 
-/* =========================
-   CONTAINER
-========================= */
+/* container */
 
 .container{
 
@@ -150,42 +62,29 @@ body{
     border:1px solid rgba(255,255,255,0.12);
 
     box-shadow:
-    0 20px 60px rgba(0,0,0,0.35);
+    0 20px 60px rgba(0,0,0,0.4);
 
     overflow:hidden;
 
-    transform-style:preserve-3d;
-
-    animation:
-    intro 1.5s ease;
-
-    transition:transform .08s linear;
+    animation:float 8s ease-in-out infinite;
 }
 
-/* intro */
+@keyframes float{
 
-@keyframes intro{
-
-    from{
-
-        opacity:0;
-
-        transform:
-        translateY(60px)
-        scale(.96);
+    0%{
+        transform:translateY(0);
     }
 
-    to{
+    50%{
+        transform:translateY(-6px);
+    }
 
-        opacity:1;
-
-        transform:
-        translateY(0)
-        scale(1);
+    100%{
+        transform:translateY(0);
     }
 }
 
-/* reflections */
+/* shine */
 
 .container::before{
 
@@ -199,29 +98,23 @@ body{
     linear-gradient(
         110deg,
         transparent 40%,
-        rgba(255,255,255,.12),
+        rgba(255,255,255,0.1),
         transparent 60%
     );
 
-    transform:
-    translateX(-120%)
-    rotate(15deg);
+    transform:translateX(-120%) rotate(15deg);
 
-    transition:1s;
+    transition:0.8s;
 
     pointer-events:none;
 }
 
 .container:hover::before{
 
-    transform:
-    translateX(120%)
-    rotate(15deg);
+    transform:translateX(120%) rotate(15deg);
 }
 
-/* =========================
-   HEADER
-========================= */
+/* header */
 
 .header{
 
@@ -237,23 +130,19 @@ body{
 .logo{
 
     width:70px;
+
     height:70px;
 
     border-radius:50%;
-
-    box-shadow:
-    0 0 25px rgba(125,211,252,.25);
 }
 
-/* =========================
-   DROPZONE
-========================= */
+/* dropzone */
 
 .dropzone{
 
     margin-top:30px;
 
-    border:2px dashed rgba(125,211,252,0.45);
+    border:2px dashed rgba(125,211,252,0.5);
 
     padding:40px;
 
@@ -261,28 +150,20 @@ body{
 
     cursor:pointer;
 
-    transition:.35s;
-
-    display:block;
+    transition:all .35s ease;
 }
 
 .dropzone:hover{
 
-    transform:translateY(-2px);
-
     border-color:#7dd3fc;
 
-    background:
-    rgba(125,211,252,0.06);
+    background:rgba(125,211,252,0.06);
 
     box-shadow:
-    inset 0 0 30px rgba(125,211,252,.15),
-    0 0 20px rgba(125,211,252,.08);
+    inset 0 0 25px rgba(125,211,252,.15);
 }
 
-/* =========================
-   PLAYER
-========================= */
+/* player */
 
 .glass-player{
 
@@ -308,17 +189,15 @@ body{
 
     overflow:hidden;
 
-    transition:.4s;
+    transition:0.4s ease;
 }
 
 .glass-player:hover{
 
-    transform:
-    translateY(-2px)
-    scale(1.01);
+    transform:translateY(-2px) scale(1.01);
 
     box-shadow:
-    0 10px 40px rgba(125,211,252,.22);
+    0 10px 40px rgba(125,211,252,0.22);
 }
 
 /* ambient */
@@ -362,13 +241,52 @@ body{
     0%{
         transform:
         rotate(0deg)
-        scale(1);
+        scale(1)
+        translateY(0px);
+    }
+
+    50%{
+        transform:
+        rotate(8deg)
+        scale(1.1)
+        translateY(-10px);
     }
 
     100%{
         transform:
-        rotate(8deg)
-        scale(1.08);
+        rotate(-8deg)
+        scale(1.05)
+        translateY(8px);
+    }
+}
+
+/* player shine */
+
+.glass-player::after{
+
+    content:'';
+
+    position:absolute;
+
+    inset:0;
+
+    background:
+    linear-gradient(
+        120deg,
+        transparent,
+        rgba(255,255,255,.06),
+        transparent
+    );
+
+    transform:translateX(-100%);
+
+    animation:shine 6s linear infinite;
+}
+
+@keyframes shine{
+
+    100%{
+        transform:translateX(100%);
     }
 }
 
@@ -392,6 +310,7 @@ body{
     border-radius:50%;
 
     width:42px;
+
     height:42px;
 
     cursor:pointer;
@@ -411,8 +330,7 @@ body{
 
 #stopBtn{
 
-    background:
-    rgba(255,255,255,0.1);
+    background:rgba(255,255,255,0.1);
 
     border:none;
 
@@ -421,6 +339,7 @@ body{
     border-radius:50%;
 
     width:35px;
+
     height:35px;
 
     cursor:pointer;
@@ -432,19 +351,17 @@ body{
 
 #stopBtn:hover{
 
-    transform:
-    scale(1.12)
-    rotate(90deg);
+    transform:scale(1.12) rotate(90deg);
 
-    background:
-    rgba(255,255,255,0.2);
+    background:rgba(255,255,255,0.2);
 }
 
-/* fft */
+/* FFT */
 
 canvas{
 
     width:140px;
+
     height:42px;
 
     border-radius:12px;
@@ -454,15 +371,13 @@ canvas{
     z-index:2;
 
     background:
-    radial-gradient(
-        circle at center,
-        #111827,
-        #020617
-    );
+    radial-gradient(circle at center,#111827,#020617);
 
     box-shadow:
     inset 0 0 25px rgba(0,0,0,.7),
     0 0 20px rgba(125,211,252,.08);
+
+    position:relative;
 
     overflow:hidden;
 }
@@ -475,8 +390,7 @@ canvas{
 
     height:6px;
 
-    background:
-    rgba(255,255,255,0.1);
+    background:rgba(255,255,255,0.1);
 
     border-radius:10px;
 
@@ -525,6 +439,13 @@ canvas{
     z-index:2;
 }
 
+.volume-box i{
+
+    color:#bae6fd;
+
+    font-size:18px;
+}
+
 #volumeSlider{
 
     appearance:none;
@@ -535,10 +456,13 @@ canvas{
 
     border-radius:20px;
 
-    background:
-    rgba(255,255,255,0.15);
+    background:rgba(255,255,255,0.15);
 
     outline:none;
+
+    overflow:hidden;
+
+    cursor:pointer;
 }
 
 #volumeSlider::-webkit-slider-thumb{
@@ -546,14 +470,18 @@ canvas{
     appearance:none;
 
     width:14px;
+
     height:14px;
 
     border-radius:50%;
 
     background:#7dd3fc;
 
-    box-shadow:
-    -100px 0 0 95px #7dd3fc;
+    box-shadow:-100px 0 0 95px #7dd3fc;
+
+    cursor:pointer;
+
+    transition:.25s;
 }
 
 /* cards */
@@ -571,8 +499,7 @@ canvas{
 
 .card{
 
-    background:
-    rgba(255,255,255,0.05);
+    background:rgba(255,255,255,0.05);
 
     padding:20px;
 
@@ -585,8 +512,7 @@ canvas{
 
 .card:hover{
 
-    transform:
-    translateY(-4px);
+    transform:translateY(-4px);
 
     box-shadow:
     0 10px 30px rgba(125,211,252,.16);
@@ -604,6 +530,7 @@ canvas{
 .bar{
 
     width:6px;
+
     height:40px;
 
     background:#7dd3fc;
@@ -654,8 +581,7 @@ canvas{
 
 .tg-btn:hover{
 
-    transform:
-    translateY(-3px);
+    transform:translateY(-3px);
 
     box-shadow:
     0 10px 30px rgba(125,211,252,.35);
@@ -672,12 +598,7 @@ footer{
 
 <canvas id="bgCanvas"></canvas>
 
-<div class="ring ring1"></div>
-<div class="ring ring2"></div>
-
-<div class="cursor-glow" id="cursorGlow"></div>
-
-<div class="container" id="container">
+<div class="container">
 
     <div class="header">
 
@@ -693,16 +614,11 @@ footer{
 
     </div>
 
-    <label class="dropzone" id="dropzone" for="fileInput">
+    <div class="dropzone" id="dropzone">
         📤 Перетащи MP3 или нажми
-    </label>
+    </div>
 
-    <input
-    type="file"
-    id="fileInput"
-    accept=".mp3,audio/mpeg"
-    hidden
-    >
+    <input type="file" id="fileInput" hidden>
 
     <div class="glass-player" id="player">
 
@@ -769,490 +685,7 @@ footer{
 
 <script>
 
-/* =========================
-   ELEMENTS
-========================= */
-
-const container =
-document.getElementById("container");
-
-const cursorGlow =
-document.getElementById("cursorGlow");
-
-const bgCanvas =
-document.getElementById("bgCanvas");
-
-const bgCtx =
-bgCanvas.getContext("2d");
-
-/* =========================
-   SMOOTH PARALLAX
-========================= */
-
-let currentX = 0;
-let currentY = 0;
-
-let targetX = 0;
-let targetY = 0;
-
-function animateContainer(){
-
-    currentX += (targetX - currentX) * 0.08;
-    currentY += (targetY - currentY) * 0.08;
-
-    container.style.transform = `
-        rotateY(${currentX}deg)
-        rotateX(${currentY}deg)
-        translateZ(0)
-    `;
-
-    requestAnimationFrame(animateContainer);
-}
-
-animateContainer();
-
-document.addEventListener(
-    "mousemove",
-    e => {
-
-        cursorGlow.style.left =
-        e.clientX + "px";
-
-        cursorGlow.style.top =
-        e.clientY + "px";
-
-        targetX =
-        -((window.innerWidth / 2 - e.clientX) / 45);
-
-        targetY =
-        ((window.innerHeight / 2 - e.clientY) / 45);
-    }
-);
-
-document.addEventListener(
-    "mouseleave",
-    () => {
-
-        targetX = 0;
-        targetY = 0;
-    }
-);
-
-/* =========================
-   CYBER BACKGROUND
-========================= */
-
-function resizeBG(){
-
-    bgCanvas.width =
-    innerWidth;
-
-    bgCanvas.height =
-    innerHeight;
-}
-
-resizeBG();
-
-window.addEventListener(
-    "resize",
-    resizeBG
-);
-
-const particles = [];
-
-for(let i=0;i<140;i++){
-
-    particles.push({
-
-        x:Math.random()*bgCanvas.width,
-
-        y:Math.random()*bgCanvas.height,
-
-        r:Math.random()*2 + 0.4,
-
-        sx:(Math.random()-0.5)*0.25,
-
-        sy:(Math.random()-0.5)*0.25,
-
-        a:Math.random()
-    });
-}
-
-let pulse = 0;
-
-function animateBG(){
-
-    requestAnimationFrame(
-        animateBG
-    );
-
-    bgCtx.clearRect(
-        0,
-        0,
-        bgCanvas.width,
-        bgCanvas.height
-    );
-
-    const glow =
-    bgCtx.createRadialGradient(
-
-        bgCanvas.width/2,
-        bgCanvas.height/2,
-        0,
-
-        bgCanvas.width/2,
-        bgCanvas.height/2,
-        bgCanvas.width/1.2
-    );
-
-    glow.addColorStop(
-        0,
-        `rgba(125,211,252,${
-            .15 + pulse
-        })`
-    );
-
-    glow.addColorStop(
-        1,
-        "transparent"
-    );
-
-    bgCtx.fillStyle = glow;
-
-    bgCtx.fillRect(
-        0,
-        0,
-        bgCanvas.width,
-        bgCanvas.height
-    );
-
-    bgCtx.strokeStyle =
-    "rgba(125,211,252,.08)";
-
-    for(let x=0;x<bgCanvas.width;x+=45){
-
-        bgCtx.beginPath();
-
-        bgCtx.moveTo(x,0);
-
-        bgCtx.lineTo(x,bgCanvas.height);
-
-        bgCtx.stroke();
-    }
-
-    for(let y=0;y<bgCanvas.height;y+=45){
-
-        bgCtx.beginPath();
-
-        bgCtx.moveTo(0,y);
-
-        bgCtx.lineTo(bgCanvas.width,y);
-
-        bgCtx.stroke();
-    }
-
-    particles.forEach(p=>{
-
-        bgCtx.beginPath();
-
-        bgCtx.arc(
-            p.x,
-            p.y,
-            p.r,
-            0,
-            Math.PI*2
-        );
-
-        bgCtx.fillStyle =
-        `rgba(186,230,253,${p.a})`;
-
-        bgCtx.shadowBlur = 15;
-
-        bgCtx.shadowColor =
-        "rgba(125,211,252,.8)";
-
-        bgCtx.fill();
-
-        bgCtx.shadowBlur = 0;
-
-        p.x += p.sx;
-        p.y += p.sy;
-
-        if(p.x < 0) p.x = bgCanvas.width;
-        if(p.x > bgCanvas.width) p.x = 0;
-
-        if(p.y < 0) p.y = bgCanvas.height;
-        if(p.y > bgCanvas.height) p.y = 0;
-    });
-
-    pulse *= .95;
-}
-
-animateBG();
-
-/* =========================
-   MUSIC REACTIVE
-========================= */
-
-const audio =
-document.getElementById("audio");
-
-const visualizer =
-document.getElementById("visualizer");
-
-const ctx =
-visualizer.getContext("2d");
-
-function visualize(){
-
-    const audioCtx =
-    new AudioContext();
-
-    const src =
-    audioCtx.createMediaElementSource(audio);
-
-    const analyser =
-    audioCtx.createAnalyser();
-
-    src.connect(analyser);
-
-    analyser.connect(audioCtx.destination);
-
-    analyser.fftSize = 128;
-
-    const buffer =
-    new Uint8Array(
-        analyser.frequencyBinCount
-    );
-
-    visualizer.width = 140;
-    visualizer.height = 42;
-
-    function draw(){
-
-        requestAnimationFrame(draw);
-
-        analyser.getByteFrequencyData(
-            buffer
-        );
-
-        ctx.clearRect(
-            0,
-            0,
-            visualizer.width,
-            visualizer.height
-        );
-
-        let avg = 0;
-
-        for(let i=0;i<buffer.length;i++){
-
-            avg += buffer[i];
-
-            let h =
-            buffer[i]/6;
-
-            ctx.fillStyle =
-            "rgba(125,211,252,.9)";
-
-            ctx.fillRect(
-                i*2,
-                42-h,
-                1.6,
-                h
-            );
-        }
-
-        avg /= buffer.length;
-
-        pulse =
-        avg / 1500;
-    }
-
-    draw();
-}
-
-visualize();
-
-/* =========================
-   FILE INPUT
-========================= */
-
-const fileInput =
-document.getElementById("fileInput");
-
-const dropzone =
-document.getElementById("dropzone");
-
-const player =
-document.getElementById("player");
-
-fileInput.addEventListener(
-    "change",
-    e => {
-
-        const file =
-        e.target.files[0];
-
-        if(!file) return;
-
-        const url =
-        URL.createObjectURL(file);
-
-        audio.src = url;
-
-        player.style.display = "flex";
-
-        audio.load();
-    }
-);
-
-/* drag & drop */
-
-dropzone.addEventListener(
-    "dragover",
-    e => {
-
-        e.preventDefault();
-
-        dropzone.style.borderColor =
-        "#7dd3fc";
-    }
-);
-
-dropzone.addEventListener(
-    "dragleave",
-    () => {
-
-        dropzone.style.borderColor =
-        "rgba(125,211,252,0.45)";
-    }
-);
-
-dropzone.addEventListener(
-    "drop",
-    e => {
-
-        e.preventDefault();
-
-        const file =
-        e.dataTransfer.files[0];
-
-        if(!file) return;
-
-        const url =
-        URL.createObjectURL(file);
-
-        audio.src = url;
-
-        player.style.display = "flex";
-
-        audio.load();
-
-        dropzone.style.borderColor =
-        "rgba(125,211,252,0.45)";
-    }
-);
-
-/* play / pause */
-
-const playBtn =
-document.getElementById("playBtn");
-
-playBtn.addEventListener(
-    "click",
-    () => {
-
-        if(audio.paused){
-
-            audio.play();
-
-            playBtn.innerHTML =
-            '<i class="ri-pause-fill"></i>';
-
-        }else{
-
-            audio.pause();
-
-            playBtn.innerHTML =
-            '<i class="ri-play-fill"></i>';
-        }
-    }
-);
-
-/* stop */
-
-document.getElementById("stopBtn")
-.addEventListener(
-    "click",
-    () => {
-
-        audio.pause();
-
-        audio.currentTime = 0;
-
-        playBtn.innerHTML =
-        '<i class="ri-play-fill"></i>';
-    }
-);
-
-/* volume */
-
-document.getElementById("volumeSlider")
-.addEventListener(
-    "input",
-    e => {
-
-        audio.volume = e.target.value;
-    }
-);
-
-/* progress */
-
-const progressAudio =
-document.getElementById("progressAudio");
-
-const progressFill =
-document.getElementById("progressFill");
-
-audio.addEventListener(
-    "timeupdate",
-    () => {
-
-        const percent =
-        (audio.currentTime / audio.duration) * 100;
-
-        progressFill.style.width =
-        percent + "%";
-
-        const min =
-        Math.floor(audio.currentTime / 60);
-
-        const sec =
-        Math.floor(audio.currentTime % 60)
-        .toString()
-        .padStart(2,"0");
-
-        document.getElementById("time")
-        .textContent =
-        `${min}:${sec}`;
-    }
-);
-
-progressAudio.addEventListener(
-    "click",
-    e => {
-
-        const rect =
-        progressAudio.getBoundingClientRect();
-
-        const percent =
-        (e.clientX - rect.left) / rect.width;
-
-        audio.currentTime =
-        percent * audio.duration;
-    }
-);
+/* сюда вставь весь свой JS без изменений */
 
 </script>
 
