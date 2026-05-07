@@ -34,193 +34,30 @@ body{
 
     overflow-x:hidden;
 
-    background:
-
-    radial-gradient(
-        circle at top,
-        #071426,
-        #020617 55%,
-        #000814
-    );
+    background:#000;
 
     perspective:1200px;
+
+    min-height:100vh;
 }
 
 /* =========================================
-BACKGROUND
+SPACE BACKGROUND
 ========================================= */
 
 #bgCanvas{
 
     position:fixed;
 
-    inset:0;
+    top:0;
+    left:0;
 
-    width:100%;
+    width:100vw;
+    height:100vh;
 
-    height:100%;
+    z-index:-20;
 
-    z-index:-2;
-}
-
-/* =========================================
-AURORA
-========================================= */
-
-#aurora{
-
-    position:fixed;
-
-    inset:0;
-
-    z-index:-4;
-
-    pointer-events:none;
-
-    filter:blur(70px);
-
-    opacity:.9;
-
-    background:
-
-    radial-gradient(
-        circle at 20% 30%,
-        rgba(56,189,248,.18),
-        transparent 35%
-    ),
-
-    radial-gradient(
-        circle at 80% 20%,
-        rgba(14,165,233,.14),
-        transparent 40%
-    ),
-
-    radial-gradient(
-        circle at 50% 80%,
-        rgba(125,211,252,.12),
-        transparent 45%
-    );
-
-    animation:
-    auroraMove 18s ease-in-out infinite alternate;
-}
-
-@keyframes auroraMove{
-
-    0%{
-
-        transform:
-        scale(1)
-        rotate(0deg);
-    }
-
-    50%{
-
-        transform:
-        scale(1.08)
-        rotate(5deg);
-    }
-
-    100%{
-
-        transform:
-        scale(1.03)
-        rotate(-5deg);
-    }
-}
-
-/* =========================================
-SPACE FOG
-========================================= */
-
-#spaceFog{
-
-    position:fixed;
-
-    inset:-20%;
-
-    z-index:-5;
-
-    pointer-events:none;
-
-    opacity:.18;
-
-    filter:blur(100px);
-
-    background:
-
-    radial-gradient(
-        circle at 20% 30%,
-        rgba(56,189,248,.10),
-        transparent 40%
-    ),
-
-    radial-gradient(
-        circle at 80% 60%,
-        rgba(125,211,252,.08),
-        transparent 45%
-    );
-
-    animation:
-    fogMove 20s ease-in-out infinite alternate;
-}
-
-@keyframes fogMove{
-
-    0%{
-        transform:
-        translate(0,0)
-        scale(1);
-    }
-
-    100%{
-        transform:
-        translate(-40px,20px)
-        scale(1.1);
-    }
-}
-
-/* =========================================
-LIQUID BLOBS
-========================================= */
-
-.liquidBlob{
-
-    position:fixed;
-
-    width:400px;
-
-    height:400px;
-
-    border-radius:50%;
-
-    filter:blur(90px);
-
-    opacity:.12;
-
-    z-index:-4;
-
-    pointer-events:none;
-
-    animation:
-    blobMove 18s ease-in-out infinite alternate;
-}
-
-@keyframes blobMove{
-
-    0%{
-
-        transform:
-        translate(0,0)
-        scale(1);
-    }
-
-    100%{
-
-        transform:
-        translate(60px,-40px)
-        scale(1.2);
-    }
+    background:#000;
 }
 
 /* =========================================
@@ -237,29 +74,37 @@ CONTAINER
 
     max-width:720px;
 
-    background:rgba(255,255,255,0.08);
+    border-radius:30px;
 
-    border-radius:25px;
+    background:
 
-    backdrop-filter:blur(25px);
+    linear-gradient(
+        135deg,
+        rgba(255,255,255,.04),
+        rgba(255,255,255,.015)
+    );
 
-    border:1px solid rgba(255,255,255,0.16);
+    backdrop-filter:blur(35px);
+
+    -webkit-backdrop-filter:blur(35px);
+
+    border:1px solid rgba(255,255,255,.10);
 
     box-shadow:
 
-    0 25px 80px rgba(56,189,248,.15),
+    0 0 50px rgba(255,255,255,.03),
 
-    0 0 120px rgba(14,165,233,.08);
+    inset 0 0 25px rgba(255,255,255,.02);
 
     overflow:hidden;
 
     animation:
-    pageEnter 1.5s ease;
+    pageEnter 1.2s ease;
 }
 
-/* holographic glass */
+/* LIQUID GLASS */
 
-.container::after{
+.container::before{
 
     content:"";
 
@@ -267,21 +112,51 @@ CONTAINER
 
     inset:0;
 
-    border-radius:25px;
+    border-radius:30px;
+
+    background:
+
+    linear-gradient(
+        120deg,
+        rgba(255,255,255,.12),
+        transparent 30%,
+        rgba(255,255,255,.03),
+        transparent 70%
+    );
 
     pointer-events:none;
+}
+
+.container::after{
+
+    content:"";
+
+    position:absolute;
+
+    inset:-2px;
+
+    border-radius:30px;
+
+    padding:1px;
 
     background:
 
     linear-gradient(
         135deg,
-        rgba(255,255,255,.05),
-        transparent 30%,
-        rgba(56,189,248,.05),
-        transparent 70%
+        rgba(255,255,255,.14),
+        transparent,
+        rgba(255,255,255,.04)
     );
 
-    mix-blend-mode:screen;
+    -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+
+    -webkit-mask-composite:xor;
+
+    mask-composite:exclude;
+
+    pointer-events:none;
 }
 
 @keyframes pageEnter{
@@ -291,8 +166,8 @@ CONTAINER
         opacity:0;
 
         transform:
-        scale(1.03)
-        translateY(20px);
+        translateY(40px)
+        scale(.96);
     }
 
     to{
@@ -300,8 +175,8 @@ CONTAINER
         opacity:1;
 
         transform:
-        scale(1)
-        translateY(0);
+        translateY(0)
+        scale(1);
     }
 }
 
@@ -337,22 +212,26 @@ DROPZONE
 
     margin-top:30px;
 
-    border:2px dashed rgba(56,189,248,0.7);
+    border:2px dashed rgba(255,255,255,.15);
 
     padding:40px;
 
-    border-radius:15px;
+    border-radius:20px;
 
     cursor:pointer;
 
     transition:.35s;
+
+    background:rgba(255,255,255,.02);
 }
 
 .dropzone:hover{
 
-    border-color:#38bdf8;
+    border-color:rgba(255,255,255,.3);
 
-    background:rgba(56,189,248,.08);
+    background:rgba(255,255,255,.05);
+
+    transform:translateY(-2px);
 }
 
 /* =========================================
@@ -365,11 +244,11 @@ PLAYER
 
     padding:15px;
 
-    border-radius:18px;
+    border-radius:20px;
 
-    background:rgba(255,255,255,.10);
+    background:rgba(255,255,255,.04);
 
-    backdrop-filter:blur(20px);
+    backdrop-filter:blur(25px);
 
     display:none;
 
@@ -377,7 +256,7 @@ PLAYER
 
     gap:12px;
 
-    border:1px solid rgba(255,255,255,0.12);
+    border:1px solid rgba(255,255,255,.08);
 
     position:relative;
 
@@ -391,12 +270,7 @@ BUTTONS
 #playBtn{
 
     background:
-
-    linear-gradient(
-        135deg,
-        #38bdf8,
-        #0ea5e9
-    );
+    rgba(255,255,255,.10);
 
     border:none;
 
@@ -411,11 +285,20 @@ BUTTONS
     height:42px;
 
     cursor:pointer;
+
+    transition:.3s;
+}
+
+#playBtn:hover{
+
+    transform:scale(1.1);
+
+    background:rgba(255,255,255,.18);
 }
 
 #stopBtn{
 
-    background:rgba(255,255,255,0.1);
+    background:rgba(255,255,255,.08);
 
     border:none;
 
@@ -444,13 +327,7 @@ canvas{
 
     display:block;
 
-    background:
-
-    radial-gradient(
-        circle at center,
-        #020617,
-        #000
-    );
+    background:#050505;
 }
 
 /* =========================================
@@ -463,7 +340,7 @@ PROGRESS
 
     height:6px;
 
-    background:rgba(255,255,255,0.1);
+    background:rgba(255,255,255,0.08);
 
     border-radius:10px;
 
@@ -481,15 +358,8 @@ PROGRESS
     width:0;
 
     background:
-
-    linear-gradient(
-        90deg,
-        #38bdf8,
-        #0ea5e9
-    );
+    rgba(255,255,255,.7);
 }
-
-/* waveform */
 
 #waveCanvas{
 
@@ -541,31 +411,28 @@ CARDS
 
 .card{
 
-    background:rgba(255,255,255,0.07);
+    background:rgba(255,255,255,.04);
 
     padding:20px;
 
     margin:10px;
 
-    border-radius:15px;
+    border-radius:18px;
 
-    transition:
-    transform .35s ease,
-    box-shadow .35s ease;
+    border:1px solid rgba(255,255,255,.06);
+
+    backdrop-filter:blur(20px);
+
+    transition:.35s;
 }
 
 .card:hover{
 
     transform:
+    translateY(-4px)
+    scale(1.03);
 
-    perspective(1000px)
-    rotateX(6deg)
-    rotateY(-6deg)
-    translateY(-6px);
-
-    box-shadow:
-
-    0 20px 40px rgba(56,189,248,.2);
+    background:rgba(255,255,255,.06);
 }
 
 /* =========================================
@@ -585,7 +452,7 @@ LOADER
 
     height:40px;
 
-    background:#38bdf8;
+    background:white;
 
     margin:0 3px;
 
@@ -617,54 +484,48 @@ TG BUTTON
 
     padding:12px 25px;
 
-    border-radius:12px;
+    border-radius:15px;
 
     background:
-
-    linear-gradient(
-        135deg,
-        #38bdf8,
-        #0ea5e9
-    );
+    rgba(255,255,255,.06);
 
     color:white;
 
     text-decoration:none;
+
+    border:1px solid rgba(255,255,255,.1);
+
+    backdrop-filter:blur(20px);
+
+    transition:.35s;
+}
+
+.tg-btn:hover{
+
+    transform:translateY(-3px);
+
+    background:rgba(255,255,255,.1);
 }
 
 /* =========================================
-STARS
+FOOTER
 ========================================= */
 
-.reactive-star{
+footer{
 
-    position:fixed;
+    margin-top:30px;
 
-    width:2px;
+    margin-bottom:20px;
 
-    height:2px;
+    color:rgba(255,255,255,.45);
 
-    border-radius:50%;
-
-    background:white;
-
-    z-index:-2;
-
-    pointer-events:none;
-
-    box-shadow:
-
-    0 0 10px white,
-    0 0 20px #38bdf8;
+    font-size:14px;
 }
 
 </style>
 </head>
 
 <body>
-
-<div id="aurora"></div>
-<div id="spaceFog"></div>
 
 <canvas id="bgCanvas"></canvas>
 
@@ -751,6 +612,10 @@ STARS
 
 </div>
 
+<footer>
+🤖 @OpsyMindBot
+</footer>
+
 <script>
 
 /* =========================================
@@ -803,10 +668,9 @@ const wctx =
 waveCanvas.getContext("2d");
 
 /* =========================================
-AUDIO REACTIVE
+AUDIO
 ========================================= */
 
-let reactiveAnalyser = null;
 let reactiveData = null;
 
 /* =========================================
@@ -983,9 +847,6 @@ function visualize(){
     const analyser =
     audioCtx.createAnalyser();
 
-    reactiveAnalyser =
-    analyser;
-
     src.connect(analyser);
 
     analyser.connect(
@@ -1035,7 +896,7 @@ function visualize(){
             * canvas.height;
 
             ctx.fillStyle =
-            "#38bdf8";
+            "white";
 
             ctx.fillRect(
 
@@ -1050,7 +911,6 @@ function visualize(){
         }
 
         drawWaveform();
-        reactiveEffects();
     }
 
     draw();
@@ -1107,15 +967,15 @@ function drawWaveform(){
     }
 
     wctx.strokeStyle =
-    "rgba(125,211,252,.9)";
+    "rgba(255,255,255,.8)";
 
-    wctx.lineWidth = 1.2;
+    wctx.lineWidth = 1;
 
     wctx.stroke();
 }
 
 /* =========================================
-BACKGROUND
+SPACE BACKGROUND
 ========================================= */
 
 const bgCanvas =
@@ -1142,7 +1002,7 @@ window.addEventListener(
 
 const particles = [];
 
-for(let i=0;i<120;i++){
+for(let i=0;i<500;i++){
 
     particles.push({
 
@@ -1150,11 +1010,13 @@ for(let i=0;i<120;i++){
 
         y:Math.random()*innerHeight,
 
-        r:Math.random()*2,
+        r:Math.random()*2.2,
 
-        dx:(Math.random()-.5)*0.3,
+        speed:Math.random()*0.15 + 0.02,
 
-        dy:(Math.random()-.5)*0.3
+        alpha:Math.random(),
+
+        twinkle:Math.random()*0.02
     });
 }
 
@@ -1164,7 +1026,10 @@ function animateBG(){
         animateBG
     );
 
-    bgCtx.clearRect(
+    bgCtx.fillStyle =
+    "#000";
+
+    bgCtx.fillRect(
         0,
         0,
         innerWidth,
@@ -1172,6 +1037,13 @@ function animateBG(){
     );
 
     particles.forEach(p => {
+
+        p.alpha += p.twinkle;
+
+        if(p.alpha >= 1 || p.alpha <= 0.2){
+
+            p.twinkle *= -1;
+        }
 
         bgCtx.beginPath();
 
@@ -1184,175 +1056,30 @@ function animateBG(){
         );
 
         bgCtx.fillStyle =
-        "rgba(125,211,252,.8)";
+        `rgba(255,255,255,${p.alpha})`;
+
+        bgCtx.shadowBlur = 10;
+
+        bgCtx.shadowColor =
+        "white";
 
         bgCtx.fill();
 
-        p.x += p.dx;
-        p.y += p.dy;
+        bgCtx.shadowBlur = 0;
 
-        if(p.x < 0) p.x = innerWidth;
-        if(p.x > innerWidth) p.x = 0;
+        p.y += p.speed;
 
-        if(p.y < 0) p.y = innerHeight;
-        if(p.y > innerHeight) p.y = 0;
+        if(p.y > innerHeight){
+
+            p.y = 0;
+
+            p.x =
+            Math.random()*innerWidth;
+        }
     });
 }
 
 animateBG();
-
-/* =========================================
-REACTIVE STARS
-========================================= */
-
-const stars = [];
-
-for(let i=0;i<80;i++){
-
-    const star =
-    document.createElement("div");
-
-    star.className =
-    "reactive-star";
-
-    star.style.left =
-    Math.random()*100 + "vw";
-
-    star.style.top =
-    Math.random()*100 + "vh";
-
-    document.body.appendChild(star);
-
-    stars.push(star);
-}
-
-/* =========================================
-REACTIVE FX
-========================================= */
-
-function reactiveEffects(){
-
-    if(!reactiveData) return;
-
-    let bass = 0;
-    let highs = 0;
-
-    for(let i=0;i<20;i++){
-
-        bass += reactiveData[i];
-    }
-
-    for(let i=80;i<120;i++){
-
-        highs += reactiveData[i];
-    }
-
-    bass /= 20;
-    highs /= 40;
-
-    const bassPower =
-    bass / 255;
-
-    const highPower =
-    highs / 255;
-
-    const aurora =
-    document.getElementById(
-    "aurora"
-    );
-
-    aurora.style.filter = `
-
-        blur(${70 + bassPower * 40}px)
-
-        brightness(${1 + bassPower * .4})
-
-    `;
-
-    stars.forEach(star => {
-
-        star.style.transform = `
-
-            scale(${
-                1 + highPower * 2
-            })
-
-        `;
-
-        star.style.opacity =
-        .3 + highPower;
-    });
-
-    document.querySelector(
-    ".container"
-    ).style.boxShadow = `
-
-        0 25px 80px rgba(
-            56,189,248,
-            ${0.15 + bassPower * .5}
-        ),
-
-        0 0 140px rgba(
-            14,165,233,
-            ${0.08 + bassPower * .4}
-        )
-
-    `;
-}
-
-/* =========================================
-CAMERA MOTION
-========================================= */
-
-document.addEventListener(
-    "mousemove",
-    e => {
-
-        const x =
-        (e.clientX / innerWidth - .5);
-
-        const y =
-        (e.clientY / innerHeight - .5);
-
-        document.querySelector(
-        ".container"
-        ).style.transform = `
-
-            perspective(1200px)
-
-            rotateY(${x * 6}deg)
-
-            rotateX(${-y * 6}deg)
-
-        `;
-    }
-);
-
-/* =========================================
-LIQUID BLOBS
-========================================= */
-
-for(let i=0;i<2;i++){
-
-    const blob =
-    document.createElement("div");
-
-    blob.className =
-    "liquidBlob";
-
-    blob.style.background =
-    i === 0
-    ? "#38bdf8"
-    : "#0ea5e9";
-
-    blob.style.left =
-    (i * 60) + "vw";
-
-    blob.style.top =
-    (i * 30) + "vh";
-
-    document.body.appendChild(blob);
-}
 
 </script>
 
