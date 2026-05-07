@@ -42,51 +42,33 @@ body{
 /* neon rings */
 
 .ring{
-
     position:fixed;
-
     border-radius:50%;
-
     pointer-events:none;
-
     filter:blur(1px);
-
     opacity:.22;
-
-    animation:
-    rotateRing linear infinite;
+    animation:rotateRing linear infinite;
 }
 
 .ring1{
-
     width:600px;
     height:600px;
-
-    border:
-    1px solid rgba(125,211,252,.16);
-
+    border:1px solid rgba(125,211,252,.16);
     top:-200px;
     left:-200px;
-
     animation-duration:40s;
 }
 
 .ring2{
-
     width:900px;
     height:900px;
-
-    border:
-    1px solid rgba(56,189,248,.08);
-
+    border:1px solid rgba(56,189,248,.08);
     bottom:-300px;
     right:-300px;
-
     animation-duration:65s;
 }
 
 @keyframes rotateRing{
-
     from{
         transform:rotate(0deg);
     }
@@ -122,9 +104,6 @@ body{
     z-index:-1;
 
     filter:blur(20px);
-
-    transition:
-    transform .08s linear;
 }
 
 /* =========================
@@ -156,8 +135,13 @@ body{
 
     transform-style:preserve-3d;
 
-    animation:
-    intro 1.5s ease;
+    will-change:transform;
+
+    transition:
+    transform .25s ease-out,
+    box-shadow .35s ease;
+
+    animation:intro 1.5s ease;
 }
 
 /* intro */
@@ -165,7 +149,6 @@ body{
 @keyframes intro{
 
     from{
-
         opacity:0;
 
         transform:
@@ -174,7 +157,6 @@ body{
     }
 
     to{
-
         opacity:1;
 
         transform:
@@ -222,21 +204,15 @@ body{
 ========================= */
 
 .header{
-
     display:flex;
-
     justify-content:center;
-
     align-items:center;
-
     gap:15px;
 }
 
 .logo{
-
     width:70px;
     height:70px;
-
     border-radius:50%;
 
     box-shadow:
@@ -260,6 +236,10 @@ body{
     cursor:pointer;
 
     transition:.35s;
+
+    position:relative;
+
+    z-index:10;
 }
 
 .dropzone:hover{
@@ -305,6 +285,8 @@ body{
     overflow:hidden;
 
     transition:.4s;
+
+    isolation:isolate;
 }
 
 .glass-player:hover{
@@ -324,6 +306,8 @@ body{
     position:absolute;
 
     inset:-40%;
+
+    z-index:0;
 
     background:
 
@@ -438,7 +422,7 @@ body{
 
 /* fft */
 
-canvas{
+#visualizer{
 
     width:140px;
     height:42px;
@@ -502,22 +486,16 @@ canvas{
 /* time */
 
 #time{
-
     font-size:12px;
-
     z-index:2;
 }
 
 /* volume */
 
 .volume-box{
-
     display:flex;
-
     align-items:center;
-
     gap:8px;
-
     z-index:2;
 }
 
@@ -591,9 +569,7 @@ canvas{
 /* loader */
 
 .loader{
-
     margin-top:30px;
-
     display:none;
 }
 
@@ -666,16 +642,12 @@ footer{
 
 <body>
 
-<!-- BACKGROUND -->
-
 <canvas id="bgCanvas"></canvas>
 
 <div class="ring ring1"></div>
 <div class="ring ring2"></div>
 
 <div class="cursor-glow" id="cursorGlow"></div>
-
-<!-- APP -->
 
 <div class="container" id="container">
 
@@ -774,15 +746,17 @@ document.getElementById("container");
 const cursorGlow =
 document.getElementById("cursorGlow");
 
-const bgCanvas =
-document.getElementById("bgCanvas");
-
-const bgCtx =
-bgCanvas.getContext("2d");
-
 /* =========================
-   PARALLAX + CURSOR GLOW
+   PREMIUM SMOOTH PARALLAX
 ========================= */
+
+let targetX = 0;
+let targetY = 0;
+
+let currentX = 0;
+let currentY = 0;
+
+/* mouse tracking */
 
 document.addEventListener(
     "mousemove",
@@ -794,273 +768,51 @@ document.addEventListener(
         cursorGlow.style.top =
         e.clientY + "px";
 
-        let x =
-        (window.innerWidth/2 - e.clientX)/40;
+        targetX =
+        (window.innerWidth / 2 - e.clientX) / 22;
 
-        let y =
-        (window.innerHeight/2 - e.clientY)/40;
-
-        container.style.transform =
-
-        `
-        rotateY(${-x}deg)
-        rotateX(${y}deg)
-        `;
+        targetY =
+        (window.innerHeight / 2 - e.clientY) / 22;
     }
 );
+
+/* smooth animation */
+
+function animateContainer(){
+
+    requestAnimationFrame(
+        animateContainer
+    );
+
+    currentX +=
+    (targetX - currentX) * 0.06;
+
+    currentY +=
+    (targetY - currentY) * 0.06;
+
+    container.style.transform =
+
+    `
+    perspective(1800px)
+    rotateY(${-currentX}deg)
+    rotateX(${currentY}deg)
+    translateY(-2px)
+    scale(1.002)
+    `;
+}
+
+animateContainer();
+
+/* reset */
 
 document.addEventListener(
     "mouseleave",
     () => {
 
-        container.style.transform =
-        "rotateY(0deg) rotateX(0deg)";
+        targetX = 0;
+        targetY = 0;
     }
 );
-
-/* =========================
-   CYBER BACKGROUND
-========================= */
-
-function resizeBG(){
-
-    bgCanvas.width =
-    innerWidth;
-
-    bgCanvas.height =
-    innerHeight;
-}
-
-resizeBG();
-
-window.addEventListener(
-    "resize",
-    resizeBG
-);
-
-const particles = [];
-
-for(let i=0;i<140;i++){
-
-    particles.push({
-
-        x:Math.random()*bgCanvas.width,
-
-        y:Math.random()*bgCanvas.height,
-
-        r:Math.random()*2 + 0.4,
-
-        sx:(Math.random()-0.5)*0.25,
-
-        sy:(Math.random()-0.5)*0.25,
-
-        a:Math.random()
-    });
-}
-
-let pulse = 0;
-
-function animateBG(){
-
-    requestAnimationFrame(
-        animateBG
-    );
-
-    bgCtx.clearRect(
-        0,
-        0,
-        bgCanvas.width,
-        bgCanvas.height
-    );
-
-    /* glow */
-
-    const glow =
-    bgCtx.createRadialGradient(
-
-        bgCanvas.width/2,
-        bgCanvas.height/2,
-        0,
-
-        bgCanvas.width/2,
-        bgCanvas.height/2,
-        bgCanvas.width/1.2
-    );
-
-    glow.addColorStop(
-        0,
-        `rgba(125,211,252,${
-            .15 + pulse
-        })`
-    );
-
-    glow.addColorStop(
-        1,
-        "transparent"
-    );
-
-    bgCtx.fillStyle = glow;
-
-    bgCtx.fillRect(
-        0,
-        0,
-        bgCanvas.width,
-        bgCanvas.height
-    );
-
-    /* grid */
-
-    bgCtx.strokeStyle =
-    "rgba(125,211,252,.08)";
-
-    for(let x=0;x<bgCanvas.width;x+=45){
-
-        bgCtx.beginPath();
-
-        bgCtx.moveTo(x,0);
-
-        bgCtx.lineTo(x,bgCanvas.height);
-
-        bgCtx.stroke();
-    }
-
-    for(let y=0;y<bgCanvas.height;y+=45){
-
-        bgCtx.beginPath();
-
-        bgCtx.moveTo(0,y);
-
-        bgCtx.lineTo(bgCanvas.width,y);
-
-        bgCtx.stroke();
-    }
-
-    /* particles */
-
-    particles.forEach(p=>{
-
-        bgCtx.beginPath();
-
-        bgCtx.arc(
-            p.x,
-            p.y,
-            p.r,
-            0,
-            Math.PI*2
-        );
-
-        bgCtx.fillStyle =
-        `rgba(186,230,253,${p.a})`;
-
-        bgCtx.shadowBlur = 15;
-
-        bgCtx.shadowColor =
-        "rgba(125,211,252,.8)";
-
-        bgCtx.fill();
-
-        bgCtx.shadowBlur = 0;
-
-        p.x += p.sx;
-        p.y += p.sy;
-
-        if(p.x < 0) p.x = bgCanvas.width;
-        if(p.x > bgCanvas.width) p.x = 0;
-
-        if(p.y < 0) p.y = bgCanvas.height;
-        if(p.y > bgCanvas.height) p.y = 0;
-    });
-
-    pulse *= .95;
-}
-
-animateBG();
-
-/* =========================
-   MUSIC REACTIVE
-========================= */
-
-const audio =
-document.getElementById("audio");
-
-const visualizer =
-document.getElementById("visualizer");
-
-const ctx =
-visualizer.getContext("2d");
-
-function visualize(){
-
-    const audioCtx =
-    new AudioContext();
-
-    const src =
-    audioCtx.createMediaElementSource(audio);
-
-    const analyser =
-    audioCtx.createAnalyser();
-
-    src.connect(analyser);
-
-    analyser.connect(audioCtx.destination);
-
-    analyser.fftSize = 128;
-
-    const buffer =
-    new Uint8Array(
-        analyser.frequencyBinCount
-    );
-
-    visualizer.width = 140;
-    visualizer.height = 42;
-
-    function draw(){
-
-        requestAnimationFrame(draw);
-
-        analyser.getByteFrequencyData(
-            buffer
-        );
-
-        ctx.clearRect(
-            0,
-            0,
-            visualizer.width,
-            visualizer.height
-        );
-
-        let avg = 0;
-
-        for(let i=0;i<buffer.length;i++){
-
-            avg += buffer[i];
-
-            let h =
-            buffer[i]/6;
-
-            ctx.fillStyle =
-            "rgba(125,211,252,.9)";
-
-            ctx.fillRect(
-                i*2,
-                42-h,
-                1.6,
-                h
-            );
-        }
-
-        avg /= buffer.length;
-
-        /* reactive pulse */
-
-        pulse =
-        avg / 1500;
-    }
-
-    draw();
-}
-
-visualize();
 
 </script>
 
