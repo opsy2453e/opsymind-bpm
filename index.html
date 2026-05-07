@@ -49,8 +49,7 @@ SPACE BACKGROUND
 
     position:fixed;
 
-    top:0;
-    left:0;
+    inset:0;
 
     width:100vw;
     height:100vh;
@@ -58,6 +57,105 @@ SPACE BACKGROUND
     z-index:-20;
 
     background:#000;
+}
+
+/* =========================================
+SPACE GLOW
+========================================= */
+
+.space-glow{
+
+    position:fixed;
+
+    border-radius:50%;
+
+    filter:blur(140px);
+
+    pointer-events:none;
+
+    z-index:-10;
+
+    opacity:.22;
+
+    mix-blend-mode:screen;
+
+    animation:
+    glowFloat 18s ease-in-out infinite alternate;
+}
+
+.glow1{
+
+    width:600px;
+    height:600px;
+
+    background:
+    radial-gradient(
+        circle,
+        rgba(56,189,248,.25),
+        transparent 70%
+    );
+
+    top:-180px;
+    left:-180px;
+}
+
+.glow2{
+
+    width:900px;
+    height:900px;
+
+    background:
+    radial-gradient(
+        circle,
+        rgba(125,211,252,.12),
+        transparent 70%
+    );
+
+    right:-300px;
+    top:10%;
+}
+
+.glow3{
+
+    width:700px;
+    height:700px;
+
+    background:
+    radial-gradient(
+        circle,
+        rgba(255,255,255,.05),
+        transparent 75%
+    );
+
+    bottom:-250px;
+    left:20%;
+}
+
+@keyframes glowFloat{
+
+    0%{
+
+        transform:
+        translateY(0px)
+        translateX(0px)
+        scale(1);
+    }
+
+    50%{
+
+        transform:
+        translateY(-30px)
+        translateX(20px)
+        scale(1.08);
+    }
+
+    100%{
+
+        transform:
+        translateY(20px)
+        translateX(-20px)
+        scale(1.02);
+    }
 }
 
 /* =========================================
@@ -74,35 +172,51 @@ CONTAINER
 
     max-width:720px;
 
-    border-radius:30px;
+    border-radius:34px;
+
+    overflow:hidden;
+
+    isolation:isolate;
 
     background:
 
     linear-gradient(
         135deg,
-        rgba(255,255,255,.04),
-        rgba(255,255,255,.015)
+        rgba(255,255,255,.10),
+        rgba(255,255,255,.03)
     );
 
-    backdrop-filter:blur(35px);
+    backdrop-filter:
+    blur(34px)
+    saturate(180%);
 
-    -webkit-backdrop-filter:blur(35px);
+    -webkit-backdrop-filter:
+    blur(34px)
+    saturate(180%);
 
-    border:1px solid rgba(255,255,255,.10);
+    border:
+    1px solid rgba(255,255,255,.12);
 
     box-shadow:
 
-    0 0 50px rgba(255,255,255,.03),
+    0 10px 40px rgba(0,0,0,.45),
 
-    inset 0 0 25px rgba(255,255,255,.02);
+    0 0 120px rgba(56,189,248,.10),
 
-    overflow:hidden;
+    inset 0 1px 1px rgba(255,255,255,.15),
+
+    inset 0 -1px 1px rgba(255,255,255,.04);
 
     animation:
-    pageEnter 1.2s ease;
+
+    pageEnter 1.2s ease,
+
+    floatingPanel 9s ease-in-out infinite;
 }
 
-/* LIQUID GLASS */
+/* =========================================
+TOP GLASS LIGHT
+========================================= */
 
 .container::before{
 
@@ -112,20 +226,36 @@ CONTAINER
 
     inset:0;
 
-    border-radius:30px;
+    border-radius:inherit;
+
+    pointer-events:none;
 
     background:
 
     linear-gradient(
-        120deg,
-        rgba(255,255,255,.12),
-        transparent 30%,
-        rgba(255,255,255,.03),
-        transparent 70%
+        145deg,
+
+        rgba(255,255,255,.22) 0%,
+
+        rgba(255,255,255,.08) 18%,
+
+        transparent 38%,
+
+        transparent 62%,
+
+        rgba(255,255,255,.05) 78%,
+
+        rgba(255,255,255,.12) 100%
     );
 
-    pointer-events:none;
+    opacity:.9;
+
+    mix-blend-mode:screen;
 }
+
+/* =========================================
+MOVING LIQUID REFLECTION
+========================================= */
 
 .container::after{
 
@@ -133,31 +263,58 @@ CONTAINER
 
     position:absolute;
 
-    inset:-2px;
+    top:-120%;
 
-    border-radius:30px;
+    left:-40%;
 
-    padding:1px;
+    width:60%;
+
+    height:320%;
+
+    transform:rotate(18deg);
+
+    pointer-events:none;
 
     background:
 
     linear-gradient(
-        135deg,
-        rgba(255,255,255,.14),
+        90deg,
+
         transparent,
-        rgba(255,255,255,.04)
+
+        rgba(255,255,255,.16),
+
+        rgba(255,255,255,.04),
+
+        transparent
     );
 
-    -webkit-mask:
-    linear-gradient(#fff 0 0) content-box,
-    linear-gradient(#fff 0 0);
+    filter:blur(10px);
 
-    -webkit-mask-composite:xor;
-
-    mask-composite:exclude;
-
-    pointer-events:none;
+    animation:
+    liquidReflection 8s linear infinite;
 }
+
+@keyframes liquidReflection{
+
+    0%{
+
+        transform:
+        translateX(-220%)
+        rotate(18deg);
+    }
+
+    100%{
+
+        transform:
+        translateX(420%)
+        rotate(18deg);
+    }
+}
+
+/* =========================================
+ANIMATIONS
+========================================= */
 
 @keyframes pageEnter{
 
@@ -176,6 +333,54 @@ CONTAINER
 
         transform:
         translateY(0)
+        scale(1);
+    }
+}
+
+@keyframes floatingPanel{
+
+    0%{
+
+        transform:
+        translateY(0px)
+        rotateX(0deg)
+        rotateY(0deg)
+        scale(1);
+    }
+
+    25%{
+
+        transform:
+        translateY(-5px)
+        rotateX(1deg)
+        rotateY(-1deg)
+        scale(1.002);
+    }
+
+    50%{
+
+        transform:
+        translateY(-10px)
+        rotateX(-1deg)
+        rotateY(1deg)
+        scale(1.004);
+    }
+
+    75%{
+
+        transform:
+        translateY(-4px)
+        rotateX(.5deg)
+        rotateY(.5deg)
+        scale(1.002);
+    }
+
+    100%{
+
+        transform:
+        translateY(0px)
+        rotateX(0deg)
+        rotateY(0deg)
         scale(1);
     }
 }
@@ -244,73 +449,121 @@ PLAYER
 
     padding:15px;
 
-    border-radius:20px;
+    border-radius:22px;
 
-    background:rgba(255,255,255,.04);
+    background:
 
-    backdrop-filter:blur(25px);
+    linear-gradient(
+        135deg,
+        rgba(255,255,255,.08),
+        rgba(255,255,255,.025)
+    );
+
+    backdrop-filter:
+    blur(24px)
+    saturate(180%);
+
+    border:
+    1px solid rgba(255,255,255,.10);
+
+    box-shadow:
+
+    inset 0 1px 1px rgba(255,255,255,.10),
+
+    0 0 40px rgba(255,255,255,.03);
+
+    position:relative;
+
+    overflow:hidden;
 
     display:none;
 
     align-items:center;
 
     gap:12px;
+}
 
-    border:1px solid rgba(255,255,255,.08);
+.glass-player::before{
 
-    position:relative;
+    content:"";
 
-    overflow:hidden;
+    position:absolute;
+
+    inset:0;
+
+    border-radius:inherit;
+
+    pointer-events:none;
+
+    background:
+
+    linear-gradient(
+        120deg,
+
+        transparent,
+
+        rgba(255,255,255,.08),
+
+        transparent
+    );
+
+    animation:
+    playerShine 6s linear infinite;
+}
+
+@keyframes playerShine{
+
+    0%{
+        transform:translateX(-120%);
+    }
+
+    100%{
+        transform:translateX(120%);
+    }
 }
 
 /* =========================================
 BUTTONS
 ========================================= */
 
-#playBtn{
-
-    background:
-    rgba(255,255,255,.10);
+#playBtn,
+#stopBtn{
 
     border:none;
 
     color:white;
 
-    font-size:18px;
-
     border-radius:50%;
 
-    width:42px;
-
-    height:42px;
-
     cursor:pointer;
+
+    backdrop-filter:blur(10px);
+
+    background:rgba(255,255,255,.08);
 
     transition:.3s;
 }
 
-#playBtn:hover{
+#playBtn{
 
-    transform:scale(1.1);
+    width:42px;
+    height:42px;
 
-    background:rgba(255,255,255,.18);
+    font-size:18px;
 }
 
 #stopBtn{
 
-    background:rgba(255,255,255,.08);
-
-    border:none;
-
-    color:white;
-
-    border-radius:50%;
-
     width:35px;
-
     height:35px;
+}
 
-    cursor:pointer;
+#playBtn:hover,
+#stopBtn:hover{
+
+    transform:scale(1.1);
+
+    background:rgba(255,255,255,.15);
 }
 
 /* =========================================
@@ -358,7 +611,7 @@ PROGRESS
     width:0;
 
     background:
-    rgba(255,255,255,.7);
+    rgba(255,255,255,.8);
 }
 
 #waveCanvas{
@@ -411,28 +664,49 @@ CARDS
 
 .card{
 
-    background:rgba(255,255,255,.04);
+    background:
+
+    linear-gradient(
+        135deg,
+        rgba(255,255,255,.08),
+        rgba(255,255,255,.025)
+    );
+
+    border:
+    1px solid rgba(255,255,255,.10);
+
+    backdrop-filter:
+    blur(20px);
+
+    box-shadow:
+
+    inset 0 1px 1px rgba(255,255,255,.08),
+
+    0 10px 30px rgba(0,0,0,.25);
+
+    transition:
+    transform .4s ease,
+    box-shadow .4s ease;
 
     padding:20px;
 
     margin:10px;
 
     border-radius:18px;
-
-    border:1px solid rgba(255,255,255,.06);
-
-    backdrop-filter:blur(20px);
-
-    transition:.35s;
 }
 
 .card:hover{
 
     transform:
-    translateY(-4px)
+
+    translateY(-8px)
     scale(1.03);
 
-    background:rgba(255,255,255,.06);
+    box-shadow:
+
+    0 20px 60px rgba(56,189,248,.15),
+
+    inset 0 1px 1px rgba(255,255,255,.12);
 }
 
 /* =========================================
@@ -529,6 +803,10 @@ footer{
 
 <canvas id="bgCanvas"></canvas>
 
+<div class="space-glow glow1"></div>
+<div class="space-glow glow2"></div>
+<div class="space-glow glow3"></div>
+
 <div class="container">
 
     <div class="header">
@@ -618,365 +896,7 @@ footer{
 
 <script>
 
-/* =========================================
-ELEMENTS
-========================================= */
-
-const dropzone =
-document.getElementById("dropzone");
-
-const fileInput =
-document.getElementById("fileInput");
-
-const audio =
-document.getElementById("audio");
-
-const player =
-document.getElementById("player");
-
-const playBtn =
-document.getElementById("playBtn");
-
-const stopBtn =
-document.getElementById("stopBtn");
-
-const progressFill =
-document.getElementById("progressFill");
-
-const progressAudio =
-document.getElementById("progressAudio");
-
-const time =
-document.getElementById("time");
-
-const canvas =
-document.getElementById("visualizer");
-
-const ctx =
-canvas.getContext("2d");
-
-const loader =
-document.getElementById("loader");
-
-const volumeSlider =
-document.getElementById("volumeSlider");
-
-const waveCanvas =
-document.getElementById("waveCanvas");
-
-const wctx =
-waveCanvas.getContext("2d");
-
-/* =========================================
-AUDIO
-========================================= */
-
-let reactiveData = null;
-
-/* =========================================
-FILE
-========================================= */
-
-dropzone.onclick = () =>
-fileInput.click();
-
-fileInput.onchange = () =>
-handle(fileInput.files[0]);
-
-function handle(file){
-
-    const url =
-    URL.createObjectURL(file);
-
-    audio.src = url;
-
-    audio.load();
-
-    player.style.display = "flex";
-
-    visualize();
-
-    upload(file);
-}
-
-/* =========================================
-PLAY
-========================================= */
-
-playBtn.onclick = () => {
-
-    if(!audio.src) return;
-
-    if(audio.paused){
-
-        audio.play();
-
-        playBtn.innerHTML =
-        '<i class="ri-pause-fill"></i>';
-
-    }else{
-
-        audio.pause();
-
-        playBtn.innerHTML =
-        '<i class="ri-play-fill"></i>';
-    }
-};
-
-/* =========================================
-STOP
-========================================= */
-
-stopBtn.onclick = () => {
-
-    audio.pause();
-
-    audio.currentTime = 0;
-
-    audio.src = "";
-
-    player.style.display = "none";
-};
-
-/* =========================================
-VOLUME
-========================================= */
-
-volumeSlider.oninput = () => {
-
-    audio.volume =
-    volumeSlider.value;
-};
-
-/* =========================================
-PROGRESS
-========================================= */
-
-audio.ontimeupdate = () => {
-
-    const percent =
-    (audio.currentTime / audio.duration)
-    * 100;
-
-    progressFill.style.width =
-    percent + "%";
-
-    let min =
-    Math.floor(audio.currentTime / 60);
-
-    let sec =
-    Math.floor(audio.currentTime % 60);
-
-    if(sec < 10)
-        sec = "0" + sec;
-
-    time.innerText =
-    `${min}:${sec}`;
-};
-
-progressAudio.onclick = e => {
-
-    const width =
-    progressAudio.clientWidth;
-
-    audio.currentTime =
-
-    (e.offsetX / width)
-    * audio.duration;
-};
-
-/* =========================================
-UPLOAD
-========================================= */
-
-function upload(file){
-
-    loader.style.display = "block";
-
-    const formData =
-    new FormData();
-
-    formData.append("file", file);
-
-    fetch("/analyze", {
-
-        method:"POST",
-
-        body:formData
-    })
-
-    .then(res => res.json())
-
-    .then(data => {
-
-        loader.style.display =
-        "none";
-
-        document.getElementById(
-        "result"
-        ).innerHTML = `
-
-        <div class="card">
-            BPM: ${data.bpm}
-        </div>
-
-        <div class="card">
-            Key: ${data.key}
-        </div>
-
-        <div class="card">
-            Energy: ${data.energy}
-        </div>
-        `;
-    });
-}
-
-/* =========================================
-VISUALIZER
-========================================= */
-
-function visualize(){
-
-    const audioCtx =
-    new AudioContext();
-
-    const src =
-    audioCtx
-    .createMediaElementSource(audio);
-
-    const analyser =
-    audioCtx.createAnalyser();
-
-    src.connect(analyser);
-
-    analyser.connect(
-    audioCtx.destination
-    );
-
-    analyser.fftSize = 256;
-
-    reactiveData =
-    new Uint8Array(
-        analyser.frequencyBinCount
-    );
-
-    canvas.width = 140;
-    canvas.height = 42;
-
-    function draw(){
-
-        requestAnimationFrame(draw);
-
-        analyser.getByteFrequencyData(
-        reactiveData
-        );
-
-        ctx.clearRect(
-            0,
-            0,
-            canvas.width,
-            canvas.height
-        );
-
-        const barWidth =
-        canvas.width /
-        reactiveData.length;
-
-        for(
-            let i=0;
-            i<reactiveData.length;
-            i++
-        ){
-
-            const value =
-            reactiveData[i];
-
-            const height =
-            (value / 255)
-            * canvas.height;
-
-            ctx.fillStyle =
-            "white";
-
-            ctx.fillRect(
-
-                i * barWidth,
-
-                canvas.height - height,
-
-                barWidth - 1,
-
-                height
-            );
-        }
-
-        drawWaveform();
-    }
-
-    draw();
-}
-
-/* =========================================
-WAVEFORM
-========================================= */
-
-function drawWaveform(){
-
-    waveCanvas.width =
-    waveCanvas.offsetWidth;
-
-    waveCanvas.height =
-    waveCanvas.offsetHeight;
-
-    wctx.clearRect(
-        0,
-        0,
-        waveCanvas.width,
-        waveCanvas.height
-    );
-
-    if(!reactiveData) return;
-
-    wctx.beginPath();
-
-    for(
-        let i=0;
-        i<reactiveData.length;
-        i++
-    ){
-
-        const x =
-        (i / reactiveData.length)
-        * waveCanvas.width;
-
-        const y =
-        waveCanvas.height / 2 +
-
-        (
-            reactiveData[i] / 255
-        ) * 10 - 5;
-
-        if(i === 0){
-
-            wctx.moveTo(x,y);
-
-        }else{
-
-            wctx.lineTo(x,y);
-        }
-    }
-
-    wctx.strokeStyle =
-    "rgba(255,255,255,.8)";
-
-    wctx.lineWidth = 1;
-
-    wctx.stroke();
-}
-
-/* =========================================
-SPACE BACKGROUND
-========================================= */
+/* SPACE */
 
 const bgCanvas =
 document.getElementById("bgCanvas");
@@ -986,11 +906,8 @@ bgCanvas.getContext("2d");
 
 function resizeBG(){
 
-    bgCanvas.width =
-    innerWidth;
-
-    bgCanvas.height =
-    innerHeight;
+    bgCanvas.width = innerWidth;
+    bgCanvas.height = innerHeight;
 }
 
 resizeBG();
@@ -1000,17 +917,17 @@ window.addEventListener(
     resizeBG
 );
 
-const particles = [];
+const stars = [];
 
 for(let i=0;i<500;i++){
 
-    particles.push({
+    stars.push({
 
         x:Math.random()*innerWidth,
 
         y:Math.random()*innerHeight,
 
-        r:Math.random()*2.2,
+        r:Math.random()*2,
 
         speed:Math.random()*0.15 + 0.02,
 
@@ -1036,29 +953,29 @@ function animateBG(){
         innerHeight
     );
 
-    particles.forEach(p => {
+    stars.forEach(s => {
 
-        p.alpha += p.twinkle;
+        s.alpha += s.twinkle;
 
-        if(p.alpha >= 1 || p.alpha <= 0.2){
+        if(s.alpha >= 1 || s.alpha <= .2){
 
-            p.twinkle *= -1;
+            s.twinkle *= -1;
         }
 
         bgCtx.beginPath();
 
         bgCtx.arc(
-            p.x,
-            p.y,
-            p.r,
+            s.x,
+            s.y,
+            s.r,
             0,
             Math.PI*2
         );
 
         bgCtx.fillStyle =
-        `rgba(255,255,255,${p.alpha})`;
+        `rgba(255,255,255,${s.alpha})`;
 
-        bgCtx.shadowBlur = 10;
+        bgCtx.shadowBlur = 15;
 
         bgCtx.shadowColor =
         "white";
@@ -1067,13 +984,13 @@ function animateBG(){
 
         bgCtx.shadowBlur = 0;
 
-        p.y += p.speed;
+        s.y += s.speed;
 
-        if(p.y > innerHeight){
+        if(s.y > innerHeight){
 
-            p.y = 0;
+            s.y = 0;
 
-            p.x =
+            s.x =
             Math.random()*innerWidth;
         }
     });
