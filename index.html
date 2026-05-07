@@ -1,197 +1,584 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
 <meta charset="UTF-8">
+
 <title>OpsyMind BPM</title>
 
-<link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
+<link
+href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css"
+rel="stylesheet"
+/>
 
 <style>
-body {
-    margin: 0;
-    font-family: 'Segoe UI', sans-serif;
-    color: white;
-    text-align: center;
-    background: radial-gradient(circle at 20% 20%, #1e3a8a, transparent),
-                radial-gradient(circle at 80% 30%, #0ea5e9, transparent),
-                #020617;
+
+body{
+    margin:0;
+    font-family:'Segoe UI',sans-serif;
+    color:white;
+    text-align:center;
+
+    background:
+    radial-gradient(circle at 20% 20%, #1e3a8a, transparent),
+    radial-gradient(circle at 80% 30%, #0ea5e9, transparent),
+    #020617;
+
+    overflow-x:hidden;
 }
 
-/* контейнер */
-.container {
-    position: relative;
-    margin: 80px auto;
-    padding: 40px;
-    max-width: 720px;
-    background: rgba(255,255,255,0.06);
-    border-radius: 25px;
-    backdrop-filter: blur(25px);
-    border: 1px solid rgba(255,255,255,0.12);
-    box-shadow: 0 20px 60px rgba(0,0,0,0.6);
-    overflow: hidden;
+/* container */
+
+.container{
+
+    position:relative;
+
+    margin:80px auto;
+
+    padding:40px;
+
+    max-width:720px;
+
+    background:rgba(255,255,255,0.06);
+
+    border-radius:25px;
+
+    backdrop-filter:blur(25px);
+
+    border:1px solid rgba(255,255,255,0.12);
+
+    box-shadow:0 20px 60px rgba(0,0,0,0.6);
+
+    overflow:hidden;
+
+    animation:float 8s ease-in-out infinite;
 }
 
-/* hover glow */
-button, .tg-btn, .dropzone {
-    transition: 0.3s ease;
+@keyframes float{
+
+    0%{
+        transform:translateY(0);
+    }
+
+    50%{
+        transform:translateY(-6px);
+    }
+
+    100%{
+        transform:translateY(0);
+    }
 }
 
-button:hover, .tg-btn:hover, .dropzone:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0 20px #38bdf8;
+/* shine */
+
+.container::before{
+
+    content:"";
+
+    position:absolute;
+
+    inset:-50%;
+
+    background:
+    linear-gradient(
+        110deg,
+        transparent 40%,
+        rgba(255,255,255,0.1),
+        transparent 60%
+    );
+
+    transform:translateX(-120%) rotate(15deg);
+
+    transition:0.8s;
+
+    pointer-events:none;
+}
+
+.container:hover::before{
+
+    transform:translateX(120%) rotate(15deg);
 }
 
 /* header */
-.header {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 15px;
+
+.header{
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    gap:15px;
 }
 
-.logo {
-    width: 70px;
-    height: 70px;
-    border-radius: 50%;
+.logo{
+
+    width:70px;
+
+    height:70px;
+
+    border-radius:50%;
 }
 
 /* dropzone */
-.dropzone {
-    margin-top: 30px;
-    border: 2px dashed rgba(56,189,248,0.6);
-    padding: 40px;
-    border-radius: 15px;
-    cursor: pointer;
+
+.dropzone{
+
+    margin-top:30px;
+
+    border:2px dashed rgba(56,189,248,0.6);
+
+    padding:40px;
+
+    border-radius:15px;
+
+    cursor:pointer;
+
+    transition:all .35s ease;
 }
 
-/* PLAYER */
-.glass-player {
-    margin-top: 20px;
-    padding: 15px;
-    border-radius: 15px;
-    background: rgba(0,0,0,0.5);
-    backdrop-filter: blur(20px);
-    display: none;
-    flex-direction: column;
-    gap: 10px;
-    border: 1px solid rgba(255,255,255,0.1);
-    position: relative;
-    overflow: hidden;
+.dropzone:hover{
+
+    border-color:#38bdf8;
+
+    background:rgba(56,189,248,0.06);
+
+    box-shadow:
+    inset 0 0 25px rgba(56,189,248,.15);
 }
 
-/* 🌌 STAR BACKGROUND */
-.star-bg {
-    position: absolute;
-    inset: 0;
-    z-index: 0;
-    background: black;
+/* player */
+
+.glass-player{
+
+    margin-top:20px;
+
+    padding:15px;
+
+    border-radius:18px;
+
+    background:rgba(255,255,255,0.08);
+
+    backdrop-filter:blur(20px);
+
+    display:none;
+
+    align-items:center;
+
+    gap:12px;
+
+    border:1px solid rgba(255,255,255,0.12);
+
+    position:relative;
+
+    overflow:hidden;
+
+    transition:0.4s ease;
 }
 
-canvas#stars {
-    position: absolute;
-    inset: 0;
-    z-index: 0;
+.glass-player:hover{
+
+    transform:translateY(-2px) scale(1.01);
+
+    box-shadow:
+    0 10px 40px rgba(56,189,248,0.25);
 }
 
-/* controls layer */
-.player-content {
-    position: relative;
-    z-index: 2;
-    display: flex;
-    align-items: center;
-    gap: 10px;
+/* ambient wave */
+
+.ambient-wave{
+
+    position:absolute;
+
+    inset:-40%;
+
+    background:
+
+    radial-gradient(
+        circle at 20% 20%,
+        rgba(56,189,248,.20),
+        transparent 30%
+    ),
+
+    radial-gradient(
+        circle at 80% 30%,
+        rgba(14,165,233,.18),
+        transparent 35%
+    ),
+
+    radial-gradient(
+        circle at 50% 80%,
+        rgba(125,211,252,.14),
+        transparent 40%
+    );
+
+    filter:blur(45px);
+
+    animation:
+    waveMove 12s ease-in-out infinite alternate;
+
+    pointer-events:none;
 }
 
-/* buttons glow */
-#playBtn, #stopBtn {
-    transition: 0.3s;
+@keyframes waveMove{
+
+    0%{
+        transform:
+        rotate(0deg)
+        scale(1)
+        translateY(0px);
+    }
+
+    50%{
+        transform:
+        rotate(8deg)
+        scale(1.1)
+        translateY(-10px);
+    }
+
+    100%{
+        transform:
+        rotate(-8deg)
+        scale(1.05)
+        translateY(8px);
+    }
 }
 
-#playBtn:hover, #stopBtn:hover {
-    box-shadow: 0 0 15px #38bdf8;
-    transform: scale(1.1);
+/* player shine */
+
+.glass-player::after{
+
+    content:'';
+
+    position:absolute;
+
+    inset:0;
+
+    background:
+    linear-gradient(
+        120deg,
+        transparent,
+        rgba(255,255,255,.06),
+        transparent
+    );
+
+    transform:translateX(-100%);
+
+    animation:shine 6s linear infinite;
+}
+
+@keyframes shine{
+
+    100%{
+        transform:translateX(100%);
+    }
+}
+
+/* buttons */
+
+#playBtn{
+
+    background:
+    linear-gradient(
+        135deg,
+        #38bdf8,
+        #0ea5e9
+    );
+
+    border:none;
+
+    color:white;
+
+    font-size:18px;
+
+    border-radius:50%;
+
+    width:42px;
+
+    height:42px;
+
+    cursor:pointer;
+
+    transition:.35s;
+
+    z-index:2;
+}
+
+#playBtn:hover{
+
+    transform:scale(1.12);
+
+    box-shadow:
+    0 0 25px rgba(56,189,248,.8);
+}
+
+#stopBtn{
+
+    background:rgba(255,255,255,0.1);
+
+    border:none;
+
+    color:white;
+
+    border-radius:50%;
+
+    width:35px;
+
+    height:35px;
+
+    cursor:pointer;
+
+    transition:.35s;
+
+    z-index:2;
+}
+
+#stopBtn:hover{
+
+    transform:scale(1.12) rotate(90deg);
+
+    background:rgba(255,255,255,0.2);
 }
 
 /* progress */
-.progress-audio {
-    flex: 1;
-    height: 6px;
-    background: rgba(255,255,255,0.1);
-    border-radius: 10px;
-    overflow: hidden;
-    cursor: pointer;
+
+.progress-audio{
+
+    flex:1;
+
+    height:6px;
+
+    background:rgba(255,255,255,0.1);
+
+    border-radius:10px;
+
+    overflow:hidden;
+
+    cursor:pointer;
+
+    position:relative;
+
+    z-index:2;
 }
 
-.progress-fill {
-    height: 100%;
-    width: 0%;
-    background: linear-gradient(90deg, #38bdf8, #0ea5e9);
+.progress-fill{
+
+    height:100%;
+
+    width:0%;
+
+    background:
+    linear-gradient(
+        90deg,
+        #38bdf8,
+        #0ea5e9
+    );
+}
+
+/* FFT */
+
+canvas{
+
+    width:140px;
+
+    height:42px;
+
+    border-radius:10px;
+
+    background:rgba(255,255,255,0.03);
+
+    display:block;
+
+    z-index:2;
+}
+
+/* time */
+
+#time{
+
+    font-size:12px;
+
+    z-index:2;
 }
 
 /* volume */
-.volume {
-    width: 80px;
+
+.volume-box{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    z-index:2;
 }
 
-/* canvas visualizer inside player */
-canvas#visualizer {
-    width: 100%;
-    height: 70px;
-    border-radius: 10px;
-    z-index: 2;
-    position: relative;
+.volume-box i{
+
+    color:#7dd3fc;
+
+    font-size:18px;
+}
+
+#volumeSlider{
+
+    appearance:none;
+
+    width:90px;
+
+    height:4px;
+
+    border-radius:20px;
+
+    background:rgba(255,255,255,0.15);
+
+    outline:none;
+
+    overflow:hidden;
+
+    cursor:pointer;
+}
+
+#volumeSlider::-webkit-slider-thumb{
+
+    appearance:none;
+
+    width:14px;
+
+    height:14px;
+
+    border-radius:50%;
+
+    background:#38bdf8;
+
+    box-shadow:-100px 0 0 95px #38bdf8;
+
+    cursor:pointer;
+
+    transition:.25s;
+}
+
+#volumeSlider::-webkit-slider-thumb:hover{
+
+    transform:scale(1.2);
+
+    box-shadow:
+    -100px 0 0 95px #38bdf8,
+    0 0 15px #38bdf8;
 }
 
 /* cards */
-.cards {
-    margin-top: 30px;
-    display: flex;
-    justify-content: space-around;
-    flex-wrap: wrap;
+
+.cards{
+
+    margin-top:30px;
+
+    display:flex;
+
+    justify-content:space-around;
+
+    flex-wrap:wrap;
 }
 
-.card {
-    background: rgba(255,255,255,0.05);
-    padding: 20px;
-    margin: 10px;
-    border-radius: 15px;
+.card{
+
+    background:rgba(255,255,255,0.05);
+
+    padding:20px;
+
+    margin:10px;
+
+    border-radius:15px;
+
+    transition:.35s;
+}
+
+.card:hover{
+
+    transform:translateY(-4px);
+
+    box-shadow:
+    0 10px 30px rgba(56,189,248,.18);
 }
 
 /* loader */
-.loader {
-    margin-top: 30px;
-    display: none;
+
+.loader{
+
+    margin-top:30px;
+
+    display:none;
 }
 
-.bar {
-    width: 6px;
-    height: 40px;
-    background: #38bdf8;
-    margin: 0 3px;
-    display: inline-block;
-    animation: bounce 1s infinite;
+.bar{
+
+    width:6px;
+
+    height:40px;
+
+    background:#38bdf8;
+
+    margin:0 3px;
+
+    display:inline-block;
+
+    animation:bounce 1s infinite;
 }
 
-@keyframes bounce {
-    0%,100% { transform: scaleY(0.3); }
-    50% { transform: scaleY(1); }
+@keyframes bounce{
+
+    0%,100%{
+        transform:scaleY(0.3);
+    }
+
+    50%{
+        transform:scaleY(1);
+    }
 }
 
-/* button */
-.tg-btn {
-    margin-top: 30px;
-    display: inline-block;
-    padding: 12px 25px;
-    border-radius: 12px;
-    background: linear-gradient(135deg, #38bdf8, #0ea5e9);
-    color: white;
-    text-decoration: none;
+/* telegram button */
+
+.tg-btn{
+
+    margin-top:30px;
+
+    display:inline-block;
+
+    padding:12px 25px;
+
+    border-radius:12px;
+
+    background:
+    linear-gradient(
+        135deg,
+        #38bdf8,
+        #0ea5e9
+    );
+
+    color:white;
+
+    text-decoration:none;
+
+    transition:.35s;
+}
+
+.tg-btn:hover{
+
+    transform:translateY(-3px);
+
+    box-shadow:
+    0 10px 30px rgba(14,165,233,.45);
 }
 
 /* footer */
-footer {
-    margin-top: 40px;
+
+footer{
+
+    margin-top:40px;
 }
+
 </style>
 </head>
 
@@ -199,168 +586,451 @@ footer {
 
 <div class="container">
 
-<div class="header">
-    <img src="/static/avatar.png" class="logo">
-    <h1><i class="ri-headphone-fill"></i> OpsyMind BPM</h1>
-</div>
+    <div class="header">
 
-<div class="dropzone" id="dropzone">📤 Перетащи MP3 или нажми</div>
-<input type="file" id="fileInput" hidden>
+        <img
+        src="/static/avatar.png"
+        class="logo"
+        >
 
-<!-- PLAYER -->
-<div class="glass-player" id="player">
+        <h1>
+            <i class="ri-headphone-fill"></i>
+            OpsyMind BPM
+        </h1>
 
-    <div class="star-bg">
-        <canvas id="stars"></canvas>
     </div>
 
-    <div class="player-content">
-        <button id="playBtn"><i class="ri-play-fill"></i></button>
+    <div class="dropzone" id="dropzone">
+        📤 Перетащи MP3 или нажми
+    </div>
+
+    <input type="file" id="fileInput" hidden>
+
+    <!-- PLAYER -->
+
+    <div class="glass-player" id="player">
+
+        <div class="ambient-wave"></div>
+
+        <button id="playBtn">
+            <i class="ri-play-fill"></i>
+        </button>
+
+        <canvas id="visualizer"></canvas>
 
         <div class="progress-audio" id="progressAudio">
             <div class="progress-fill" id="progressFill"></div>
         </div>
 
-        <input type="range" class="volume" id="volume" min="0" max="1" step="0.01">
-
         <span id="time">0:00</span>
 
-        <button id="stopBtn"><i class="ri-close-line"></i></button>
+        <div class="volume-box">
+
+            <i class="ri-volume-up-line"></i>
+
+            <input
+            type="range"
+            id="volumeSlider"
+            min="0"
+            max="1"
+            step="0.01"
+            value="1"
+            >
+
+        </div>
+
+        <button id="stopBtn">
+            <i class="ri-close-line"></i>
+        </button>
+
+        <audio id="audio"></audio>
+
     </div>
 
-    <canvas id="visualizer"></canvas>
-    <audio id="audio"></audio>
+    <!-- loader -->
+
+    <div class="loader" id="loader">
+
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+
+    </div>
+
+    <!-- result -->
+
+    <div class="cards" id="result"></div>
+
+    <!-- tg -->
+
+    <a
+    href="https://t.me/OpsyMindBot"
+    target="_blank"
+    class="tg-btn"
+    >
+        Открыть бота
+    </a>
+
 </div>
 
-<div class="loader" id="loader">
-    <div class="bar"></div><div class="bar"></div><div class="bar"></div>
-</div>
-
-<div class="cards" id="result"></div>
-
-</div>
+<footer>
+🤖 @OpsyMindBot
+</footer>
 
 <script>
-const dropzone = document.getElementById("dropzone");
-const fileInput = document.getElementById("fileInput");
 
-const audio = document.getElementById("audio");
-const player = document.getElementById("player");
-const playBtn = document.getElementById("playBtn");
-const stopBtn = document.getElementById("stopBtn");
+const dropzone =
+document.getElementById("dropzone");
 
-const volume = document.getElementById("volume");
+const fileInput =
+document.getElementById("fileInput");
 
-const progressFill = document.getElementById("progressFill");
-const progressAudio = document.getElementById("progressAudio");
+const audio =
+document.getElementById("audio");
 
-const canvas = document.getElementById("visualizer");
-const ctx = canvas.getContext("2d");
+const player =
+document.getElementById("player");
 
-dropzone.onclick = () => fileInput.click();
-fileInput.onchange = () => handle(fileInput.files[0]);
+const playBtn =
+document.getElementById("playBtn");
 
-volume.oninput = () => audio.volume = volume.value;
+const stopBtn =
+document.getElementById("stopBtn");
+
+const progressFill =
+document.getElementById("progressFill");
+
+const progressAudio =
+document.getElementById("progressAudio");
+
+const time =
+document.getElementById("time");
+
+const canvas =
+document.getElementById("visualizer");
+
+const ctx =
+canvas.getContext("2d");
+
+const loader =
+document.getElementById("loader");
+
+const volumeSlider =
+document.getElementById("volumeSlider");
+
+/* open file */
+
+dropzone.onclick = () =>
+fileInput.click();
+
+fileInput.onchange = () =>
+handle(fileInput.files[0]);
+
+/* handle */
 
 function handle(file){
-    const url = URL.createObjectURL(file);
+
+    const url =
+    URL.createObjectURL(file);
+
     audio.src = url;
+
+    audio.load();
+
     player.style.display = "flex";
+
     visualize();
+
     upload(file);
 }
 
 /* play */
+
 playBtn.onclick = () => {
-    audio.paused ? audio.play() : audio.pause();
+
+    if(!audio.src) return;
+
+    if(audio.paused){
+
+        audio.play();
+
+        playBtn.innerHTML =
+        '<i class="ri-pause-fill"></i>';
+
+    }else{
+
+        audio.pause();
+
+        playBtn.innerHTML =
+        '<i class="ri-play-fill"></i>';
+    }
 };
 
 /* stop */
+
 stopBtn.onclick = () => {
+
     audio.pause();
+
     audio.currentTime = 0;
+
+    audio.src = "";
+
     player.style.display = "none";
+
+    progressFill.style.width = "0%";
+
+    time.innerText = "0:00";
+
+    document.getElementById("result")
+    .innerHTML = "";
+};
+
+/* volume */
+
+volumeSlider.oninput = () => {
+
+    audio.volume =
+    volumeSlider.value;
 };
 
 /* progress */
+
 audio.ontimeupdate = () => {
-    let p = (audio.currentTime / audio.duration) * 100;
-    progressFill.style.width = p + "%";
+
+    let percent =
+    (audio.currentTime / audio.duration) * 100;
+
+    progressFill.style.width =
+    percent + "%";
+
+    let min =
+    Math.floor(audio.currentTime / 60);
+
+    let sec =
+    Math.floor(audio.currentTime % 60);
+
+    if(sec < 10){
+        sec = "0" + sec;
+    }
+
+    time.innerText =
+    `${min}:${sec}`;
+};
+
+/* seek */
+
+progressAudio.onclick = e => {
+
+    let width =
+    progressAudio.clientWidth;
+
+    let clickX =
+    e.offsetX;
+
+    audio.currentTime =
+    (clickX / width) * audio.duration;
 };
 
 /* upload */
-function upload(file){
-    const fd = new FormData();
-    fd.append("file", file);
 
-    fetch("/analyze", {method:"POST", body:fd})
-    .then(r=>r.json())
-    .then(d=>{
-        document.getElementById("result").innerHTML =
-        `<div class="card">BPM: ${d.bpm}</div>
-         <div class="card">Key: ${d.key}</div>
-         <div class="card">Energy: ${d.energy}</div>`;
+function upload(file){
+
+    loader.style.display = "block";
+
+    document.getElementById("result")
+    .innerHTML = "";
+
+    const formData =
+    new FormData();
+
+    formData.append("file", file);
+
+    fetch("/analyze", {
+
+        method:"POST",
+
+        body:formData
+    })
+
+    .then(res => res.json())
+
+    .then(data => {
+
+        loader.style.display = "none";
+
+        document.getElementById("result")
+        .innerHTML = `
+
+        <div class="card">
+            BPM: ${data.bpm}
+        </div>
+
+        <div class="card">
+            Key: ${data.key}
+        </div>
+
+        <div class="card">
+            Energy: ${data.energy}
+        </div>
+
+        `;
     });
 }
 
-/* visualizer */
+/* FFT */
+
 function visualize(){
-    const ctxA = new AudioContext();
-    const src = ctxA.createMediaElementSource(audio);
-    const analyser = ctxA.createAnalyser();
+
+    const audioCtx =
+    new AudioContext();
+
+    const src =
+    audioCtx.createMediaElementSource(audio);
+
+    const analyser =
+    audioCtx.createAnalyser();
 
     src.connect(analyser);
-    analyser.connect(ctxA.destination);
 
-    analyser.fftSize = 64;
-    const data = new Uint8Array(analyser.frequencyBinCount);
+    analyser.connect(audioCtx.destination);
 
-    canvas.width = 700;
-    canvas.height = 70;
+    analyser.fftSize = 256;
 
-    function draw(){
-        requestAnimationFrame(draw);
-        analyser.getByteFrequencyData(data);
+    analyser.smoothingTimeConstant = 0.92;
 
-        ctx.clearRect(0,0,canvas.width,canvas.height);
+    const bufferLength =
+    analyser.frequencyBinCount;
 
-        let w = canvas.width / data.length;
+    const dataArray =
+    new Uint8Array(bufferLength);
 
-        for(let i=0;i<data.length;i++){
-            let h = data[i]/2;
-            ctx.fillStyle = "#38bdf8";
-            ctx.fillRect(i*w, canvas.height-h, w-2, h);
+    canvas.width = 140;
+
+    canvas.height = 42;
+
+    const particles = [];
+
+    function createParticle(x,y){
+
+        particles.push({
+
+            x,
+            y,
+
+            size:Math.random()*3+1,
+
+            speed:Math.random()*0.6+0.2,
+
+            alpha:1
+        });
+    }
+
+    function drawParticles(){
+
+        for(
+            let i=particles.length-1;
+            i>=0;
+            i--
+        ){
+
+            const p = particles[i];
+
+            ctx.beginPath();
+
+            ctx.arc(
+                p.x,
+                p.y,
+                p.size,
+                0,
+                Math.PI*2
+            );
+
+            ctx.fillStyle =
+            `rgba(56,189,248,${p.alpha})`;
+
+            ctx.fill();
+
+            p.y -= p.speed;
+
+            p.alpha -= 0.015;
+
+            if(p.alpha <= 0){
+
+                particles.splice(i,1);
+            }
         }
     }
+
+    function draw(){
+
+        requestAnimationFrame(draw);
+
+        analyser.getByteFrequencyData(dataArray);
+
+        ctx.clearRect(
+            0,
+            0,
+            canvas.width,
+            canvas.height
+        );
+
+        let barWidth =
+        canvas.width / bufferLength;
+
+        for(let i=0;i<bufferLength;i++){
+
+            let value = dataArray[i];
+
+            let percent =
+            value / 255;
+
+            let height =
+            canvas.height * percent;
+
+            let offset =
+            canvas.height - height;
+
+            let hue = i * 4;
+
+            ctx.beginPath();
+
+            ctx.roundRect(
+
+                i * barWidth,
+
+                offset,
+
+                barWidth - 1.5,
+
+                height,
+
+                6
+            );
+
+            ctx.fillStyle =
+            `hsla(${190 + hue/8},100%,60%,0.9)`;
+
+            ctx.fill();
+
+            if(
+                value > 160 &&
+                Math.random() > 0.92
+            ){
+
+                createParticle(
+                    i * barWidth,
+                    offset
+                );
+            }
+        }
+
+        drawParticles();
+    }
+
     draw();
 }
 
-/* STAR BACKGROUND */
-const stars = document.getElementById("stars");
-const sctx = stars.getContext("2d");
-
-stars.width = 700;
-stars.height = 140;
-
-let starArr = Array.from({length:80},()=>({
-    x:Math.random()*700,
-    y:Math.random()*140,
-    r:Math.random()*1.5
-}));
-
-function starAnim(){
-    requestAnimationFrame(starAnim);
-    sctx.fillStyle="black";
-    sctx.fillRect(0,0,700,140);
-
-    sctx.fillStyle="white";
-    starArr.forEach(s=>{
-        sctx.beginPath();
-        sctx.arc(s.x,s.y,s.r,0,Math.PI*2);
-        sctx.fill();
-    });
-}
-starAnim();
 </script>
 
 </body>
